@@ -8,6 +8,10 @@ from app.core.logger import logger
 class RepositoryService:
 
     @staticmethod
+    def get_repository_path(repository_name: str, upload_dir: str) -> Path:
+        return Path(upload_dir) / repository_name
+
+    @staticmethod
     def clone_repository(repo_url: str, upload_dir: str):
 
         repo_name = repo_url.rstrip("/").split("/")[-1]
@@ -27,13 +31,13 @@ class RepositoryService:
 
             Repo.clone_from(repo_url, destination)
 
+            logger.info(f"Repository cloned: {repo_name}")
+
             return {
                 "success": True,
                 "message": "Repository cloned successfully.",
                 "repository_name": repo_name,
             }
-
-            logger.info(f"Repository cloned: {repo_name}")
 
         except GitCommandError as e:
 

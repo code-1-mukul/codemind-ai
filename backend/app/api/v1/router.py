@@ -5,6 +5,7 @@ from app.api.v1.endpoints import repository
 from app.api.v1.endpoints import scanner
 from app.api.v1.endpoints import tree
 from app.api.v1.endpoints import summary
+from app.api.v1.endpoints import analysis
 
 api_router = APIRouter()
 
@@ -31,4 +32,10 @@ api_router.include_router(
 api_router.include_router(
     summary.router,
     tags=["Summary"]
+)
+
+api_router.include_router(
+    analysis.router,
+    prefix="/repository",
+    tags=["Analysis"]
 )
