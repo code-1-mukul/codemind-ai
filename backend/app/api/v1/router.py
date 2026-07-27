@@ -6,6 +6,7 @@ from app.api.v1.endpoints import scanner
 from app.api.v1.endpoints import tree
 from app.api.v1.endpoints import summary
 from app.api.v1.endpoints import analysis
+from app.api.v1.endpoints import chunk
 
 api_router = APIRouter()
 
@@ -38,4 +39,10 @@ api_router.include_router(
     analysis.router,
     prefix="/repository",
     tags=["Analysis"]
+)
+
+api_router.include_router(
+    chunk.router,
+    prefix="/chunk",
+    tags=["Chunk"],
 )
