@@ -17,3 +17,17 @@ class EmbeddingService:
         )
 
         return embedding.tolist()
+
+    def embed_batch(
+    self,
+    texts: list[str],
+    ) -> list[list[float]]:
+
+        embeddings = self.model.encode(
+            texts,
+            batch_size=32,
+            normalize_embeddings=True,
+            show_progress_bar=True,
+        )
+
+        return embeddings.tolist()
