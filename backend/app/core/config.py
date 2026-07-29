@@ -7,6 +7,8 @@ class Settings(BaseSettings):
     HOST: str
     PORT: int
     UPLOAD_DIR: str
+    FAISS_STORAGE_DIR: str = "storage/faiss"
+    METADATA_STORAGE_DIR: str = "storage/metadata"
 
     model_config = SettingsConfigDict(
         env_file=".env",
