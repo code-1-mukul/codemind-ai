@@ -1,5 +1,6 @@
 import faiss
 import numpy as np
+import os
 
 class VectorStoreService:
 
@@ -20,23 +21,12 @@ class VectorStoreService:
 
         self.index.add(embeddings)
 
-    import numpy as np
-
     def search(
         self,
         query_embedding: list[float],
         top_k: int = 5,
     ) -> tuple[np.ndarray, np.ndarray]:
-        """
-        Search for the most similar embeddings in the FAISS index.
-
-        Args:
-            query_embedding (list[float]): Embedding vector of the query.
-            top_k (int): Number of nearest neighbors to retrieve.
-
-        Returns:
-            tuple: (scores, indices)
-        """
+        #Search for the most similar embeddings in the FAISS index.
 
         if self.index is None:
             raise ValueError("FAISS index has not been created.")
@@ -54,12 +44,7 @@ class VectorStoreService:
         return scores, indices
 
     def save(self, file_path: str) -> None:
-        """
-        Save the FAISS index to disk.
-
-        Args:
-            file_path (str): Path where the index will be saved.
-        """
+        #Save the FAISS index to disk.
 
         if self.index is None:
             raise ValueError("No FAISS index to save.")
@@ -67,13 +52,11 @@ class VectorStoreService:
         faiss.write_index(self.index, file_path)
 
     def load(self, file_path: str) -> None:
-        """
-        Load a FAISS index from disk.
+        #Load a FAISS index from disk.
 
-        Args:
-            file_path (str): Path of the saved FAISS index.
-        """
 
         self.index = faiss.read_index(file_path)
+
+    
 
     

@@ -48,11 +48,6 @@ class IndexingService:
 
         self.vector_store.save(str(index_path))
 
-        self.metadata_service.save_metadata(
-            repository_name,
-            embedded_chunks,
-        )
-
         embedded_chunks = []
 
         for chunk, embedding in zip(
@@ -66,5 +61,10 @@ class IndexingService:
                     embedding=embedding,
                 )
             )
+
+        self.metadata_service.save_metadata(
+                    repository_name,
+                    embedded_chunks,
+        )
 
         return embedded_chunks

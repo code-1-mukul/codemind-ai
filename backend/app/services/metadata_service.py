@@ -19,53 +19,86 @@ class MetadataService:
     self,
     repository_name: str,
     embedded_chunks: list[EmbeddedChunk],
-) -> None:
-        """
-        Save metadata for all indexed chunks.
-        """
+    ) -> None:
+            """
+            Save metadata for all indexed chunks.
+            """
 
-        entries = []
+            entries = []
 
-        for idx, embedded_chunk in enumerate(embedded_chunks):
+            for idx, embedded_chunk in enumerate(embedded_chunks):
 
-            entries.append(
-                MetadataEntry(
-                    id=idx,
-                    chunk=embedded_chunk.chunk,
+                entries.append(
+                    MetadataEntry(
+                        id=idx,
+                        chunk=embedded_chunk.chunk,
+                    )
                 )
+
+            metadata = MetadataFile(entries=entries)
+
+            metadata_path = (
+                Path(settings.METADATA_STORAGE_DIR)
+                / f"{repository_name}.json"
             )
 
-        metadata = MetadataFile(entries=entries)
+            with open(metadata_path, "w", encoding="utf-8") as f:
+
+                json.dump(
+                    metadata.model_dump(),
+                    f,
+                    indent=4,
+                    ensure_ascii=False,
+                )
+
+    def load_metadata(
+        self,
+        repository_name: str,
+    ) -> MetadataFile:
+        # Load metadata for a repository.
 
         metadata_path = (
             Path(settings.METADATA_STORAGE_DIR)
-            / f"{repository_name}.json"
-        )
-
-        with open(metadata_path, "w", encoding="utf-8") as f:
-
-            json.dump(
-                metadata.model_dump(),
-                f,
-                indent=4,
-                ensure_ascii=False,
+                / f"{repository_name}.json"
             )
 
-        def load_metadata(
-        self,
-        repository_name: str,
-        ) -> MetadataFile:
-                """
-                Load metadata for a repository.
-                """
+        with open(metadata_path, "r", encoding="utf-8") as f:
+            metadata = json.load(f)
 
-                metadata_path = (
-                    Path(settings.METADATA_STORAGE_DIR)
-                    / f"{repository_name}.json"
-                )
+        return MetadataFile.model_validate(metadata)
 
-                with open(metadata_path, "r", encoding="utf-8") as f:
+    def get_chunk_by_id(
+    self,
+    repository_name: str,
+    chunk_id: int,
+    ):
+        # Retrieve a chunk by its metadata ID.
 
-                    metadata = json.load(f)
+        metadata = self.load_metadata(repository_name)
 
-                return MetadataFile.model_validate(metadata)
+        for entry in metadata.entries:
+            if entry.id == chunk_id:
+                return entry
+
+        return None
+
+    def get_chunks_by_ids(
+    self,
+    repository_name: str,
+    chunk_ids: list[int],
+    ):
+    # Retrieve multiple chunks by their IDs.
+
+        metadata = self.load_metadata(repository_name)
+
+        chunk_map = {
+            entry.id: entry
+            for entry in metadata.entries
+        }
+
+        return [
+            chunk_map[idx]
+            for idx in chunk_ids
+            if idx in chunk_map
+        ]
+    

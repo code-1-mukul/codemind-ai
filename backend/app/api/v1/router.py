@@ -7,6 +7,7 @@ from app.api.v1.endpoints import tree
 from app.api.v1.endpoints import summary
 from app.api.v1.endpoints import analysis
 from app.api.v1.endpoints import chunk
+from app.api.v1.endpoints import retrieval
 
 api_router = APIRouter()
 
@@ -45,4 +46,10 @@ api_router.include_router(
     chunk.router,
     prefix="/chunk",
     tags=["Chunk"],
+)
+
+api_router.include_router(
+    retrieval.router,
+    prefix="/repository",
+    tags=["Semantic Retrieval"]
 )

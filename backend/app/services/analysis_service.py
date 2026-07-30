@@ -2,12 +2,16 @@ from pathlib import Path
 
 from app.parsers.parser import ParserService
 from app.schemas.analysis import RepositoryAnalysis
+from app.services.chunking_service import ChunkingService
+from app.services.indexing_service import IndexingService
 
 
 class AnalysisService:
 
     def __init__(self):
         self.parser = ParserService()
+        self.chunking_service = ChunkingService()
+        self.indexing_service = IndexingService()
 
     def analyze_repository(
         self,
@@ -34,5 +38,14 @@ class AnalysisService:
 
             except Exception as e:
                 print(f"Skipping {file_path}: {e}")
+
+        chunks = self.chunking_service.create_chunks(
+            analysis
+        )
+
+        self.indexing_service.embed_chunks(
+            repository_name=repository_name,
+            chunks=chunks,
+        )
 
         return analysis

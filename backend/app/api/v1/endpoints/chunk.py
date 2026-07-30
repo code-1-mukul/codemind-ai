@@ -29,10 +29,7 @@ def test_chunks(repository_name: str):
 
     chunks = chunking_service.create_chunks(analysis)
 
-    embedded_chunks = indexing_service.embed_chunks(
-        repository_name,
-        chunks
-    )
+    embedded_chunks = indexing_service.embed_chunks(repository_name,chunks)
 
     return {
         "repository": repository_name,

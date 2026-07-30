@@ -1,0 +1,15 @@
+{
+    "entries": [
+        {
+            "id": 0,
+            "chunk": {
+                "id": "uploads\\facialRecog\\Face_Recognization_with_real_time_database\\main.py:findEncodings",
+                "type": "function",
+                "name": "findEncodings",
+                "file_path": "uploads\\facialRecog\\Face_Recognization_with_real_time_database\\main.py",
+                "source_code": "def findEncodings(imagesList):\n    encodeList = []\n    for img in imagesList:\n        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)\n        encode = face_recognition.face_encodings(img)[0]\n        encodeList.append(encode)\n\n    return encodeList",
+                "docstring": null
+            }
+        }
+    ]
+}
