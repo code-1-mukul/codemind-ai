@@ -8,6 +8,7 @@ from app.api.v1.endpoints import summary
 from app.api.v1.endpoints import analysis
 from app.api.v1.endpoints import chunk
 from app.api.v1.endpoints import retrieval
+from app.api.v1.endpoints import question_answer
 
 api_router = APIRouter()
 
@@ -52,4 +53,10 @@ api_router.include_router(
     retrieval.router,
     prefix="/repository",
     tags=["Semantic Retrieval"]
+)
+
+api_router.include_router(
+    question_answer.router,
+    prefix="/question_answer",
+    tags=["Question Answering"]
 )
