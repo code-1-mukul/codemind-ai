@@ -4,7 +4,7 @@ from app.services.llm.llm_service import LLMService
 class QuestionAnswerService:
 
     def __init__(self):
-        self.retirever=RetrievalService()
+        self.retriever=RetrievalService()
         self.llm=LLMService()
 
     def answer_question(
@@ -13,7 +13,7 @@ class QuestionAnswerService:
         question: str,
         top_k: int=5
     ):
-        search_result = self.retirever.search(
+        search_result = self.retriever.search(
             repository_name=repository_name,
             query=question,
             top_k=top_k,

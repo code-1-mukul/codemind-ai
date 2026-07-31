@@ -9,6 +9,7 @@ from app.api.v1.endpoints import analysis
 from app.api.v1.endpoints import chunk
 from app.api.v1.endpoints import retrieval
 from app.api.v1.endpoints import question_answer
+from app.api.v1.endpoints import chat
 
 api_router = APIRouter()
 
@@ -59,4 +60,10 @@ api_router.include_router(
     question_answer.router,
     prefix="/question_answer",
     tags=["Question Answering"]
+)
+
+api_router.include_router(
+    chat.router,
+    prefix="/chat",
+    tags=["Chat"]
 )
