@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard</title>
+
+    <link rel="stylesheet"
+          href="/static/css/global.css">
+
+    <link rel="stylesheet"
+          href="/static/css/sidebar.css">
+
+    <link rel="stylesheet"
+          href="/static/css/dashboard.css">
+
+    <link rel="stylesheet"
+          href="/static/css/components.css">
+
+</head>
+
+<body>
+
+    <div class="dashboard">
+
+        <aside class="sidebar">
+
+            <div class="logo">
+
+                🚀 CodeMind AI
+
+            </div>
+
+            <ul class="menu">
+
+                <li>📊 Repository Summary</li>
+
+                <li>🌳 Project Tree</li>
+
+                <li>🏗 Architecture</li>
+
+                <li>🔍 Semantic Search</li>
+
+                <li>🤖 AI Chat</li>
+
+                <li>📄 Code Chunks</li>
+
+            </ul>
+
+        </aside>
+
+        <header class="topbar">
+
+            <div class="topbar-left">
+
+                Repository:
+                <span id="repository-name">
+
+                    None Loaded
+
+                </span>
+
+            </div>
+
+            <div class="topbar-right">
+
+                🟢 Ready
+
+            </div>
+
+        </header>
+
+        <main class="content">
+
+            <div class="dashboard-grid">
+                <div id="repository-summary" class="summary-card">
+
+                    <h2>📊 Repository Summary</h2>
+
+                    <p><strong>Repository:</strong>
+                        <span id="summary-repository-name">-</span>
+                    </p>
+
+                    <p><strong>Status:</strong>
+                        <span id="summary-status">-</span>
+                    </p>
+
+                    <p><strong>Python Files:</strong>
+                        <span id="summary-python-files">-</span>
+                    </p>
+
+                    <p><strong>Classes:</strong>
+                        <span id="summary-classes">-</span>
+                    </p>
+
+                    <p><strong>Functions:</strong>
+                        <span id="summary-functions">-</span>
+                    </p>
+
+                    <p><strong>Chunks:</strong>
+                        <span id="summary-chunks">-</span>
+                    </p>
+
+                </div>
+
+                <div class="upload-card">
+
+                    <h1>📂 Upload Repository</h1>
+
+                    <p>
+
+                        Analyze GitHub repositories using AI-powered
+                        semantic search and architecture understanding.
+
+                    </p>
+
+                    <div class="input-group">
+
+                        <label>GitHub Repository URL</label>
+
+                        <input
+                            type="text"
+                            id="repo-url"
+                            placeholder="https://github.com/username/repository"
+                        >
+
+                    </div>
+
+                    <div class="divider">
+
+                        OR
+
+                    </div>
+
+                    <div class="upload-box">
+
+                        <p>
+
+                            Drag & Drop ZIP Archive
+
+                        </p>
+
+                        <input
+                            type="file"
+                            id="zip-file"
+                            accept=".zip"
+                        >
+
+                    </div>
+
+                    <button id="analyze-btn">
+
+                        Analyze Repository
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+    <script src="/static/js/dashboard.js"></script>
+
+</body>
+
+</html>  

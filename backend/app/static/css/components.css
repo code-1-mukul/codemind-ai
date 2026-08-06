@@ -1,0 +1,237 @@
+/* ==========================================
+   Upload Card
+========================================== */
+
+.upload-card {
+
+    width: 100%;
+
+    max-width: 750px;
+
+    margin: 50px auto;
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius-lg);
+
+    padding: 40px;
+
+    box-shadow: var(--shadow-md);
+}
+
+.upload-card h1 {
+
+    font-size: 34px;
+
+    margin-bottom: 15px;
+}
+
+.upload-description {
+
+    color: var(--text-secondary);
+
+    margin-bottom: 35px;
+
+    line-height: 1.7;
+}
+
+/* ==========================================
+   Input
+========================================== */
+
+.input-group {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+
+    margin-bottom: 30px;
+}
+
+.input-group label {
+
+    font-weight: 600;
+}
+
+.input-group input {
+
+    background: var(--background);
+
+    border: 1px solid var(--border);
+
+    color: var(--text-primary);
+
+    padding: 15px;
+
+    border-radius: var(--radius-md);
+
+    font-size: 16px;
+
+    outline: none;
+
+    transition: var(--transition);
+}
+
+.input-group input:focus {
+
+    border-color: var(--primary);
+
+    box-shadow: 0 0 0 3px rgba(59,130,246,.2);
+}
+
+/* ==========================================
+   Divider
+========================================== */
+
+.divider {
+
+    display: flex;
+
+    align-items: center;
+
+    margin: 30px 0;
+
+    color: var(--text-secondary);
+}
+
+.divider::before,
+.divider::after {
+
+    content: "";
+
+    flex: 1;
+
+    height: 1px;
+
+    background: var(--border);
+}
+
+.divider span {
+
+    margin: 0 20px;
+} 
+
+/* ==========================================
+   Upload Box
+========================================== */
+
+.upload-box {
+
+    border: 2px dashed var(--border);
+
+    border-radius: var(--radius-md);
+
+    padding: 40px;
+
+    text-align: center;
+
+    margin-bottom: 30px;
+
+    transition: var(--transition);
+}
+
+.upload-box:hover {
+
+    border-color: var(--primary);
+
+    background: rgba(59,130,246,.05);
+}
+
+.upload-box p {
+
+    font-size: 18px;
+
+    margin-bottom: 10px;
+}
+
+.upload-box small {
+
+    color: var(--text-secondary);
+
+    display: block;
+
+    margin-bottom: 20px;
+}
+
+.upload-box input {
+
+    color: var(--text-secondary);
+} 
+
+/* ==========================================
+   Analyze Button
+========================================== */
+
+#analyze-btn {
+
+    width: 100%;
+
+    padding: 16px;
+
+    font-size: 18px;
+
+    font-weight: 600;
+
+    color: white;
+
+    background: linear-gradient(
+        135deg,
+        var(--primary),
+        var(--secondary)
+    );
+
+    border-radius: var(--radius-md);
+
+    transition: var(--transition);
+}
+
+#analyze-btn:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 12px 30px rgba(59,130,246,.35);
+}
+
+.summary-card {
+
+    background: #151c2e;
+
+    border: 1px solid #2b3650;
+
+    border-radius: 18px;
+
+    padding: 24px;
+
+    color: white;
+
+}
+
+.summary-card h2 {
+
+    margin-bottom: 24px;
+
+}
+
+.summary-card p {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-bottom: 16px;
+
+    color: #cbd5e1;
+
+}
+
+.summary-card span {
+
+    color: white;
+
+    font-weight: 600;
+
+}

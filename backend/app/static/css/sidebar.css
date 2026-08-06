@@ -1,0 +1,46 @@
+.sidebar {
+
+    width: 280px;
+
+    background: var(--surface);
+
+    border-right: 1px solid var(--border);
+
+    border-right: 1px solid #e2e8f0;
+
+    padding: 30px 20px;
+}
+
+.logo {
+
+    font-size: 24px;
+
+    font-weight: bold;
+
+    color: #2563eb;
+
+    margin-bottom: 40px;
+}
+
+.menu {
+
+    list-style: none;
+}
+
+.menu li {
+
+    padding: 14px;
+
+    margin-bottom: 10px;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+.menu li:hover {
+
+    background: #022e68;
+}

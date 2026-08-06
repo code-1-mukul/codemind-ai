@@ -26,9 +26,13 @@ class IndexingService:
             for chunk in chunks
         ]
 
+        print("Started embdeddings...")
+
         embeddings = self.embedding_service.embed_batch(
             texts
         )
+
+        print("Embeddings completed.")
 
         dimension = len(embeddings[0])
 

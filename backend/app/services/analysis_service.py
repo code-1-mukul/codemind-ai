@@ -43,6 +43,8 @@ class AnalysisService:
             analysis
         )
 
+        print(f"Number of chunks: {len(chunks)}")
+
         self.indexing_service.embed_chunks(
             repository_name=repository_name,
             chunks=chunks,

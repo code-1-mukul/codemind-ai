@@ -1,0 +1,116 @@
+/* ==========================================
+   CodeMind Design System
+========================================== */
+
+:root {
+
+    /* ---------- Colors ---------- */
+
+    --background: #0B1120;
+
+    --surface: #111827;
+
+    --surface-light: #1E293B;
+
+    --border: #334155;
+
+    --primary: #3B82F6;
+
+    --primary-hover: #2563EB;
+
+    --secondary: #8B5CF6;
+
+    --success: #22C55E;
+
+    --danger: #EF4444;
+
+    --text-primary: #F8FAFC;
+
+    --text-secondary: #94A3B8;
+
+    /* ---------- Radius ---------- */
+
+    --radius-sm: 8px;
+
+    --radius-md: 14px;
+
+    --radius-lg: 20px;
+
+    /* ---------- Shadows ---------- */
+
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.25);
+
+    --shadow-md: 0 8px 30px rgba(0,0,0,0.35);
+
+    /* ---------- Transition ---------- */
+
+    --transition: 0.3s ease;
+}
+
+/* ==========================
+   Global Reset
+========================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ==========================
+   Body
+========================== */
+
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+
+    background-color: var(--background);
+
+    color: var(--text-primary);
+
+    line-height: 1.6;
+}
+
+/* ==========================
+   Links
+========================== */
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* ==========================
+   Buttons
+========================== */
+
+button {
+
+    cursor: pointer;
+
+    font-family: inherit;
+
+    border: none;
+
+    border-radius: var(--radius-md);
+
+    transition: var(--transition);
+}
+
+/* ==========================
+   Images
+========================== */
+
+img {
+    max-width: 100%;
+}
+
+/* ==========================
+   Container
+========================== */
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
