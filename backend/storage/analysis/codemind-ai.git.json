@@ -1,0 +1,1520 @@
+{
+    "repository_name": "codemind-ai.git",
+    "files": [
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\testing.py",
+            "imports": [
+                {
+                    "module": "app.services.question_answer_service"
+                }
+            ],
+            "functions": [],
+            "classes": []
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\main.py",
+            "imports": [
+                {
+                    "module": "fastapi"
+                },
+                {
+                    "module": "pathlib"
+                },
+                {
+                    "module": "fastapi"
+                },
+                {
+                    "module": "fastapi.staticfiles"
+                },
+                {
+                    "module": "fastapi.templating"
+                },
+                {
+                    "module": "app.core.config"
+                },
+                {
+                    "module": "app.api.v1.router"
+                }
+            ],
+            "functions": [],
+            "classes": []
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\__init__.py",
+            "imports": [],
+            "functions": [],
+            "classes": []
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\api\\__init__.py",
+            "imports": [],
+            "functions": [],
+            "classes": []
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\api\\v1\\router.py",
+            "imports": [
+                {
+                    "module": "fastapi"
+                },
+                {
+                    "module": "app.api.v1.endpoints"
+                },
+                {
+                    "module": "app.api.v1.endpoints"
+                },
+                {
+                    "module": "app.api.v1.endpoints"
+                },
+                {
+                    "module": "app.api.v1.endpoints"
+                },
+                {
+                    "module": "app.api.v1.endpoints"
+                },
+                {
+                    "module": "app.api.v1.endpoints"
+                },
+                {
+                    "module": "app.api.v1.endpoints"
+                },
+                {
+                    "module": "app.api.v1.endpoints"
+                },
+                {
+                    "module": "app.api.v1.endpoints"
+                },
+                {
+                    "module": "app.api.v1.endpoints"
+                },
+                {
+                    "module": "app.api.v1.endpoints"
+                }
+            ],
+            "functions": [],
+            "classes": []
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\api\\v1\\__init__.py",
+            "imports": [],
+            "functions": [],
+            "classes": []
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\api\\v1\\endpoints\\analysis.py",
+            "imports": [
+                {
+                    "module": "fastapi"
+                },
+                {
+                    "module": "app.services.analysis_service"
+                },
+                {
+                    "module": "app.services.repository_service"
+                },
+                {
+                    "module": "app.core.config"
+                }
+            ],
+            "functions": [
+                {
+                    "name": "analyze_repository",
+                    "line_number": 14,
+                    "docstring": null,
+                    "source_code": "def analyze_repository(repository_name: str):\n\n    repository_path = repository_service.get_repository_path(\n        repository_name,\n        settings.UPLOAD_DIR,\n        )\n\n    if not repository_path.exists():\n        raise HTTPException(\n            status_code=404,\n            detail=\"Repository not found\",\n        )\n\n    return analysis_service.analyze_repository(\n        repository_name=repository_name,\n        repository_path=repository_path,\n    )"
+                }
+            ],
+            "classes": []
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\api\\v1\\endpoints\\chat.py",
+            "imports": [
+                {
+                    "module": "fastapi"
+                },
+                {
+                    "module": "app.schemas.chat"
+                },
+                {
+                    "module": "app.services.conversation_service"
+                }
+            ],
+            "functions": [
+                {
+                    "name": "chat",
+                    "line_number": 12,
+                    "docstring": null,
+                    "source_code": "def chat(request: ChatRequest):\n    return conversation_service.chat(request)"
+                }
+            ],
+            "classes": []
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\api\\v1\\endpoints\\chunk.py",
+            "imports": [
+                {
+                    "module": "fastapi"
+                },
+                {
+                    "module": "app.core.config"
+                },
+                {
+                    "module": "app.services.analysis_service"
+                },
+                {
+                    "module": "app.services.chunking_service"
+                },
+                {
+                    "module": "app.services.repository_service"
+                },
+                {
+                    "module": "app.services.indexing_service"
+                }
+            ],
+            "functions": [
+                {
+                    "name": "test_chunks",
+                    "line_number": 18,
+                    "docstring": null,
+                    "source_code": "def test_chunks(repository_name: str):\n\n    repository_path = repository_service.get_repository_path(\n        repository_name,\n        settings.UPLOAD_DIR,\n    )\n\n    analysis = analysis_service.analyze_repository(\n        repository_name=repository_name,\n        repository_path=repository_path\n    )\n\n    chunks = chunking_service.create_chunks(analysis)\n\n    embedded_chunks = indexing_service.embed_chunks(repository_name,chunks)\n\n    return {\n        \"repository\": repository_name,\n        \"total_chunks\": len(embedded_chunks),\n        \"embedding_dimension\": len(\n            embedded_chunks[0].embedding\n        ),\n        \"first_chunk_name\": embedded_chunks[0].chunk.name,\n        \"first_chunk_type\": embedded_chunks[0].chunk.type,\n        \"first_10_embedding_values\":\n            embedded_chunks[0].embedding[:10],\n    }"
+                }
+            ],
+            "classes": []
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\api\\v1\\endpoints\\dashboard.py",
+            "imports": [
+                {
+                    "module": "fastapi"
+                }
+            ],
+            "functions": [
+                {
+                    "name": "get_repository_summary",
+                    "line_number": 7,
+                    "docstring": null,
+                    "source_code": "def get_repository_summary(repository_name: str):\n\n    return {\n        \"repository_name\": repository_name,\n        \"status\": \"Indexed\",\n\n        \"python_files\": 0,\n        \"classes\": 0,\n        \"functions\": 0,\n        \"chunks\": 0,\n    }"
+                }
+            ],
+            "classes": []
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\api\\v1\\endpoints\\health.py",
+            "imports": [
+                {
+                    "module": "fastapi"
+                }
+            ],
+            "functions": [],
+            "classes": []
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\api\\v1\\endpoints\\question_answer.py",
+            "imports": [
+                {
+                    "module": "fastapi"
+                },
+                {
+                    "module": "app.schemas.question_answer"
+                },
+                {
+                    "module": "app.services.question_answer_service"
+                }
+            ],
+            "functions": [
+                {
+                    "name": "ask_question",
+                    "line_number": 15,
+                    "docstring": null,
+                    "source_code": "def ask_question(request: AskRequest):\n\n    return service.answer_question(\n        repository_name=request.repository_name,\n        question=request.question,\n    )"
+                }
+            ],
+            "classes": []
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\api\\v1\\endpoints\\repository.py",
+            "imports": [
+                {
+                    "module": "fastapi"
+                },
+                {
+                    "module": "app.core.config"
+                },
+                {
+                    "module": "app.schemas.repository"
+                },
+                {
+                    "module": "app.services.repository_service"
+                }
+            ],
+            "functions": [],
+            "classes": []
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\api\\v1\\endpoints\\retrieval.py",
+            "imports": [
+                {
+                    "module": "fastapi"
+                },
+                {
+                    "module": "app.schemas.retrieval"
+                },
+                {
+                    "module": "app.services.retrieval_service"
+                }
+            ],
+            "functions": [
+                {
+                    "name": "search_repository",
+                    "line_number": 17,
+                    "docstring": "Perform semantic search on an indexed repository.",
+                    "source_code": "def search_repository(\n    repository_name: str,\n    request: SearchRequest,\n    ):\n        \"\"\"\n        Perform semantic search on an indexed repository.\n        \"\"\"\n\n        results = retrieval_service.search(\n            repository_name=repository_name,\n            query=request.query,\n            top_k=request.top_k,\n        )\n\n        return results"
+                }
+            ],
+            "classes": []
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\api\\v1\\endpoints\\scanner.py",
+            "imports": [
+                {
+                    "module": "pathlib"
+                },
+                {
+                    "module": "fastapi"
+                },
+                {
+                    "module": "app.core.config"
+                },
+                {
+                    "module": "app.services.scanner_service"
+                }
+            ],
+            "functions": [],
+            "classes": []
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\api\\v1\\endpoints\\summary.py",
+            "imports": [
+                {
+                    "module": "pathlib"
+                },
+                {
+                    "module": "fastapi"
+                },
+                {
+                    "module": "app.core.config"
+                },
+                {
+                    "module": "app.services.summary_service"
+                }
+            ],
+            "functions": [],
+            "classes": []
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\api\\v1\\endpoints\\tree.py",
+            "imports": [
+                {
+                    "module": "pathlib"
+                },
+                {
+                    "module": "fastapi"
+                },
+                {
+                    "module": "app.core.config"
+                },
+                {
+                    "module": "app.services.tree_service"
+                }
+            ],
+            "functions": [],
+            "classes": []
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\api\\v1\\endpoints\\__init__.py",
+            "imports": [],
+            "functions": [],
+            "classes": []
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\core\\config.py",
+            "imports": [
+                {
+                    "module": "pydantic_settings"
+                }
+            ],
+            "functions": [],
+            "classes": [
+                {
+                    "name": "Settings",
+                    "line_number": 4,
+                    "docstring": null,
+                    "source_code": "class Settings(BaseSettings):\n    PROJECT_NAME: str\n    API_VERSION: str\n    HOST: str\n    PORT: int\n    UPLOAD_DIR: str\n    FAISS_STORAGE_DIR: str = \"storage/faiss\"\n    METADATA_STORAGE_DIR: str = \"storage/metadata\"\n    GEMINI_API_KEY: str\n    model_config = SettingsConfigDict(\n        env_file=\".env\",\n        case_sensitive=True,\n    )",
+                    "methods": []
+                }
+            ]
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\core\\logger.py",
+            "imports": [
+                {
+                    "module": "logging"
+                }
+            ],
+            "functions": [],
+            "classes": []
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\core\\__init__.py",
+            "imports": [],
+            "functions": [],
+            "classes": []
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\models\\__init__.py",
+            "imports": [],
+            "functions": [],
+            "classes": []
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\parsers\\parser.py",
+            "imports": [
+                {
+                    "module": "pathlib"
+                },
+                {
+                    "module": "app.parsers.python_parser"
+                },
+                {
+                    "module": "app.schemas.analysis"
+                }
+            ],
+            "functions": [],
+            "classes": [
+                {
+                    "name": "ParserService",
+                    "line_number": 7,
+                    "docstring": "Chooses the correct parser based on file extension.",
+                    "source_code": "class ParserService:\n    \"\"\"\n    Chooses the correct parser based on file extension.\n    \"\"\"\n\n    def __init__(self):\n        self.parsers = {\n            \".py\": PythonParser(),\n        }\n\n    def parse(self, file_path: Path)->FileAnalysis:\n        parser = self.parsers.get(file_path.suffix)\n\n        if parser is None:\n            raise ValueError(f\"Unsupported file type: {file_path.suffix}\")\n\n        return parser.parse(file_path)",
+                    "methods": [
+                        {
+                            "name": "__init__",
+                            "line_number": 12,
+                            "docstring": null,
+                            "source_code": "class ParserService:\n    \"\"\"\n    Chooses the correct parser based on file extension.\n    \"\"\"\n\n    def __init__(self):\n        self.parsers = {\n            \".py\": PythonParser(),\n        }\n\n    def parse(self, file_path: Path)->FileAnalysis:\n        parser = self.parsers.get(file_path.suffix)\n\n        if parser is None:\n            raise ValueError(f\"Unsupported file type: {file_path.suffix}\")\n\n        return parser.parse(file_path)"
+                        },
+                        {
+                            "name": "parse",
+                            "line_number": 17,
+                            "docstring": null,
+                            "source_code": "class ParserService:\n    \"\"\"\n    Chooses the correct parser based on file extension.\n    \"\"\"\n\n    def __init__(self):\n        self.parsers = {\n            \".py\": PythonParser(),\n        }\n\n    def parse(self, file_path: Path)->FileAnalysis:\n        parser = self.parsers.get(file_path.suffix)\n\n        if parser is None:\n            raise ValueError(f\"Unsupported file type: {file_path.suffix}\")\n\n        return parser.parse(file_path)"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\parsers\\python_parser.py",
+            "imports": [
+                {
+                    "module": "pathlib"
+                },
+                {
+                    "module": "ast"
+                },
+                {
+                    "module": "app.schemas.analysis"
+                }
+            ],
+            "functions": [],
+            "classes": [
+                {
+                    "name": "PythonParser",
+                    "line_number": 12,
+                    "docstring": null,
+                    "source_code": "class PythonParser:\n    def parse(self, file_path: Path) -> FileAnalysis:\n        try:\n            source_code = file_path.read_text(encoding=\"utf-8\")\n            source_lines = source_code.splitlines()\n        except UnicodeDecodeError:\n            raise ValueError(f\"Cannot read file: {file_path}\")\n        tree = ast.parse(source_code)\n\n        analysis = FileAnalysis(\n            file_path=str(file_path),\n        )\n\n        for node in tree.body:\n\n            if isinstance(node, ast.Import):\n                for alias in node.names:\n                    analysis.imports.append(\n                        ImportInfo(\n                            module=alias.name,\n                        )\n                    )\n\n            elif isinstance(node, ast.ImportFrom):\n                analysis.imports.append(\n                    ImportInfo(\n                        module=node.module or \"\",\n                    )\n                )\n\n            elif isinstance(node, ast.FunctionDef):\n                analysis.functions.append(\n                    FunctionInfo(\n                        name=node.name,\n                        line_number=node.lineno,\n                        docstring=ast.get_docstring(node),\n                        source_code=\"\\n\".join(\n                            source_lines[node.lineno - 1 : node.end_lineno]\n                        ),\n                    )\n                )\n\n            elif isinstance(node, ast.ClassDef):\n\n                class_info = ClassInfo(\n                    name=node.name,\n                    line_number=node.lineno,\n                    docstring=ast.get_docstring(node),\n                    source_code=\"\\n\".join(\n                        source_lines[node.lineno - 1 : node.end_lineno]\n                    ),\n                )\n\n                for child in node.body:\n\n                    if isinstance(child, ast.FunctionDef):\n                        class_info.methods.append(\n                            FunctionInfo(\n                                name=child.name,\n                                line_number=child.lineno,\n                                docstring=ast.get_docstring(child),\n                                source_code=\"\\n\".join(\n                                    source_lines[node.lineno - 1 : node.end_lineno]\n                                ),\n                            )\n                        )\n\n                analysis.classes.append(class_info)\n\n        return analysis",
+                    "methods": [
+                        {
+                            "name": "parse",
+                            "line_number": 13,
+                            "docstring": null,
+                            "source_code": "class PythonParser:\n    def parse(self, file_path: Path) -> FileAnalysis:\n        try:\n            source_code = file_path.read_text(encoding=\"utf-8\")\n            source_lines = source_code.splitlines()\n        except UnicodeDecodeError:\n            raise ValueError(f\"Cannot read file: {file_path}\")\n        tree = ast.parse(source_code)\n\n        analysis = FileAnalysis(\n            file_path=str(file_path),\n        )\n\n        for node in tree.body:\n\n            if isinstance(node, ast.Import):\n                for alias in node.names:\n                    analysis.imports.append(\n                        ImportInfo(\n                            module=alias.name,\n                        )\n                    )\n\n            elif isinstance(node, ast.ImportFrom):\n                analysis.imports.append(\n                    ImportInfo(\n                        module=node.module or \"\",\n                    )\n                )\n\n            elif isinstance(node, ast.FunctionDef):\n                analysis.functions.append(\n                    FunctionInfo(\n                        name=node.name,\n                        line_number=node.lineno,\n                        docstring=ast.get_docstring(node),\n                        source_code=\"\\n\".join(\n                            source_lines[node.lineno - 1 : node.end_lineno]\n                        ),\n                    )\n                )\n\n            elif isinstance(node, ast.ClassDef):\n\n                class_info = ClassInfo(\n                    name=node.name,\n                    line_number=node.lineno,\n                    docstring=ast.get_docstring(node),\n                    source_code=\"\\n\".join(\n                        source_lines[node.lineno - 1 : node.end_lineno]\n                    ),\n                )\n\n                for child in node.body:\n\n                    if isinstance(child, ast.FunctionDef):\n                        class_info.methods.append(\n                            FunctionInfo(\n                                name=child.name,\n                                line_number=child.lineno,\n                                docstring=ast.get_docstring(child),\n                                source_code=\"\\n\".join(\n                                    source_lines[node.lineno - 1 : node.end_lineno]\n                                ),\n                            )\n                        )\n\n                analysis.classes.append(class_info)\n\n        return analysis"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\parsers\\__init__.py",
+            "imports": [],
+            "functions": [],
+            "classes": []
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\schemas\\analysis.py",
+            "imports": [
+                {
+                    "module": "pydantic"
+                }
+            ],
+            "functions": [],
+            "classes": [
+                {
+                    "name": "ImportInfo",
+                    "line_number": 4,
+                    "docstring": null,
+                    "source_code": "class ImportInfo(BaseModel):\n    module: str = Field(..., description=\"Imported module name\")",
+                    "methods": []
+                },
+                {
+                    "name": "FunctionInfo",
+                    "line_number": 8,
+                    "docstring": null,
+                    "source_code": "class FunctionInfo(BaseModel):\n    name: str\n    line_number: int\n    docstring: str | None = None\n    source_code: str | None = None",
+                    "methods": []
+                },
+                {
+                    "name": "ClassInfo",
+                    "line_number": 15,
+                    "docstring": null,
+                    "source_code": "class ClassInfo(BaseModel):\n    name: str\n    line_number: int\n    docstring: str | None = None\n    source_code: str | None = None\n    methods: list[FunctionInfo] = Field(default_factory=list)",
+                    "methods": []
+                },
+                {
+                    "name": "FileAnalysis",
+                    "line_number": 23,
+                    "docstring": null,
+                    "source_code": "class FileAnalysis(BaseModel):\n    file_path: str\n    imports: list[ImportInfo] = []\n    functions: list[FunctionInfo] = []\n    classes: list[ClassInfo] = []",
+                    "methods": []
+                },
+                {
+                    "name": "RepositoryAnalysis",
+                    "line_number": 30,
+                    "docstring": null,
+                    "source_code": "class RepositoryAnalysis(BaseModel):\n    repository_name: str\n    files: list[FileAnalysis]",
+                    "methods": []
+                }
+            ]
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\schemas\\chat.py",
+            "imports": [
+                {
+                    "module": "enum"
+                },
+                {
+                    "module": "typing"
+                },
+                {
+                    "module": "pydantic"
+                }
+            ],
+            "functions": [],
+            "classes": [
+                {
+                    "name": "MessageRole",
+                    "line_number": 7,
+                    "docstring": null,
+                    "source_code": "class MessageRole(str, Enum):\n    USER = \"user\"\n    ASSISTANT = \"assistant\"",
+                    "methods": []
+                },
+                {
+                    "name": "ChatMessage",
+                    "line_number": 12,
+                    "docstring": null,
+                    "source_code": "class ChatMessage(BaseModel):\n    role: MessageRole = Field(..., description=\"Role of the sender\")\n    content: str = Field(..., description=\"Message content\")",
+                    "methods": []
+                },
+                {
+                    "name": "ChatRequest",
+                    "line_number": 17,
+                    "docstring": null,
+                    "source_code": "class ChatRequest(BaseModel):\n    repository_name:str\n    question: str = Field(..., description=\"User's current question\")\n    session_id: Optional[str] = Field(\n        default=None,\n        description=\"Conversation session ID. Leave empty to start a new conversation.\"\n    )",
+                    "methods": []
+                },
+                {
+                    "name": "ChatResponse",
+                    "line_number": 26,
+                    "docstring": null,
+                    "source_code": "class ChatResponse(BaseModel):\n    answer: str = Field(..., description=\"Assistant's response\")\n    session_id: str = Field(..., description=\"Conversation session ID\")\n    sources: Optional[List[str]] = Field(\n        default=None,\n        description=\"Relevant source files used to answer the question\"\n    )",
+                    "methods": []
+                }
+            ]
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\schemas\\chunk.py",
+            "imports": [
+                {
+                    "module": "pydantic"
+                }
+            ],
+            "functions": [],
+            "classes": [
+                {
+                    "name": "CodeChunk",
+                    "line_number": 4,
+                    "docstring": null,
+                    "source_code": "class CodeChunk(BaseModel):\n    id: str\n    type: str\n    name: str\n    file_path: str\n    source_code: str\n    docstring: str | None = None",
+                    "methods": []
+                }
+            ]
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\schemas\\embedding.py",
+            "imports": [
+                {
+                    "module": "pydantic"
+                },
+                {
+                    "module": "app.schemas.chunk"
+                }
+            ],
+            "functions": [],
+            "classes": [
+                {
+                    "name": "EmbeddedChunk",
+                    "line_number": 6,
+                    "docstring": null,
+                    "source_code": "class EmbeddedChunk(BaseModel):\n    chunk: CodeChunk\n    embedding: list[float]",
+                    "methods": []
+                }
+            ]
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\schemas\\file.py",
+            "imports": [
+                {
+                    "module": "pydantic"
+                }
+            ],
+            "functions": [],
+            "classes": [
+                {
+                    "name": "FileMetadata",
+                    "line_number": 4,
+                    "docstring": null,
+                    "source_code": "class FileMetadata(BaseModel):\n    name: str\n    path: str\n    extension: str\n    size: int\n    language: str",
+                    "methods": []
+                }
+            ]
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\schemas\\metadata.py",
+            "imports": [
+                {
+                    "module": "pydantic"
+                },
+                {
+                    "module": "app.schemas.chunk"
+                }
+            ],
+            "functions": [],
+            "classes": [
+                {
+                    "name": "MetadataEntry",
+                    "line_number": 6,
+                    "docstring": null,
+                    "source_code": "class MetadataEntry(BaseModel):\n    id: int\n    chunk: CodeChunk",
+                    "methods": []
+                },
+                {
+                    "name": "MetadataFile",
+                    "line_number": 11,
+                    "docstring": null,
+                    "source_code": "class MetadataFile(BaseModel):\n    entries: list[MetadataEntry]",
+                    "methods": []
+                }
+            ]
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\schemas\\question_answer.py",
+            "imports": [
+                {
+                    "module": "pydantic"
+                },
+                {
+                    "module": "typing"
+                }
+            ],
+            "functions": [],
+            "classes": [
+                {
+                    "name": "AskRequest",
+                    "line_number": 5,
+                    "docstring": null,
+                    "source_code": "class AskRequest(BaseModel):\n    repository_name: str\n    question: str",
+                    "methods": []
+                },
+                {
+                    "name": "SourceChunk",
+                    "line_number": 10,
+                    "docstring": null,
+                    "source_code": "class SourceChunk(BaseModel):\n    score: float\n    file_path: str\n    chunk_type: str\n    chunk_name: str",
+                    "methods": []
+                },
+                {
+                    "name": "AskResponse",
+                    "line_number": 17,
+                    "docstring": null,
+                    "source_code": "class AskResponse(BaseModel):\n    question: str\n    answer: str\n    sources: List[SourceChunk]",
+                    "methods": []
+                }
+            ]
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\schemas\\repository.py",
+            "imports": [
+                {
+                    "module": "pydantic"
+                }
+            ],
+            "functions": [],
+            "classes": [
+                {
+                    "name": "RepositoryCloneRequest",
+                    "line_number": 4,
+                    "docstring": null,
+                    "source_code": "class RepositoryCloneRequest(BaseModel):\n\n    repo_url: HttpUrl\n\n    @field_validator(\"repo_url\")\n    @classmethod\n    def validate_github_url(cls, value):\n\n        if value.host != \"github.com\":\n\n            raise ValueError(\"Only GitHub repositories are supported.\")\n\n        return value",
+                    "methods": [
+                        {
+                            "name": "validate_github_url",
+                            "line_number": 10,
+                            "docstring": null,
+                            "source_code": "class RepositoryCloneRequest(BaseModel):\n\n    repo_url: HttpUrl\n\n    @field_validator(\"repo_url\")\n    @classmethod\n    def validate_github_url(cls, value):\n\n        if value.host != \"github.com\":\n\n            raise ValueError(\"Only GitHub repositories are supported.\")\n\n        return value"
+                        }
+                    ]
+                },
+                {
+                    "name": "RepositoryCloneResponse",
+                    "line_number": 19,
+                    "docstring": null,
+                    "source_code": "class RepositoryCloneResponse(BaseModel):\n\n    success: bool\n\n    message: str\n\n    repository_name: str",
+                    "methods": []
+                }
+            ]
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\schemas\\retrieval.py",
+            "imports": [
+                {
+                    "module": "pydantic"
+                },
+                {
+                    "module": "typing"
+                }
+            ],
+            "functions": [],
+            "classes": [
+                {
+                    "name": "SearchRequest",
+                    "line_number": 5,
+                    "docstring": null,
+                    "source_code": "class SearchRequest(BaseModel):\n    query: str = Field(..., min_length=1, description=\"Natural language search query\")\n    top_k: int = Field(default=5, ge=1, le=20, description=\"Number of results to return\")",
+                    "methods": []
+                },
+                {
+                    "name": "SearchResult",
+                    "line_number": 10,
+                    "docstring": null,
+                    "source_code": "class SearchResult(BaseModel):\n    score: float\n    file_path: str\n    chunk_type: str\n    chunk_name: str\n    content: str",
+                    "methods": []
+                },
+                {
+                    "name": "SearchResponse",
+                    "line_number": 18,
+                    "docstring": null,
+                    "source_code": "class SearchResponse(BaseModel):\n    query: str\n    results: List[SearchResult]",
+                    "methods": []
+                }
+            ]
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\schemas\\summary.py",
+            "imports": [
+                {
+                    "module": "pydantic"
+                }
+            ],
+            "functions": [],
+            "classes": [
+                {
+                    "name": "LargestFile",
+                    "line_number": 4,
+                    "docstring": null,
+                    "source_code": "class LargestFile(BaseModel):\n    name: str\n    size: int",
+                    "methods": []
+                },
+                {
+                    "name": "RepositorySummary",
+                    "line_number": 9,
+                    "docstring": null,
+                    "source_code": "class RepositorySummary(BaseModel):\n    repository: str\n    total_files: int\n    total_directories: int\n    total_size: int\n    languages: dict[str, int]\n    largest_file: LargestFile",
+                    "methods": []
+                }
+            ]
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\schemas\\tree.py",
+            "imports": [
+                {
+                    "module": "pydantic"
+                }
+            ],
+            "functions": [],
+            "classes": [
+                {
+                    "name": "TreeNode",
+                    "line_number": 4,
+                    "docstring": null,
+                    "source_code": "class TreeNode(BaseModel):\n    name: str\n    path: str\n    is_directory: bool\n    children: list[\"TreeNode\"] = Field(default_factory=list)",
+                    "methods": []
+                }
+            ]
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\schemas\\__init__.py",
+            "imports": [],
+            "functions": [],
+            "classes": []
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\services\\analysis_service.py",
+            "imports": [
+                {
+                    "module": "pathlib"
+                },
+                {
+                    "module": "app.parsers.parser"
+                },
+                {
+                    "module": "app.schemas.analysis"
+                },
+                {
+                    "module": "app.services.chunking_service"
+                },
+                {
+                    "module": "app.services.indexing_service"
+                }
+            ],
+            "functions": [],
+            "classes": [
+                {
+                    "name": "AnalysisService",
+                    "line_number": 9,
+                    "docstring": null,
+                    "source_code": "class AnalysisService:\n\n    def __init__(self):\n        self.parser = ParserService()\n        self.chunking_service = ChunkingService()\n        self.indexing_service = IndexingService()\n\n    def analyze_repository(\n        self,\n        repository_name: str,\n        repository_path: Path,\n    ) -> RepositoryAnalysis:\n\n        analysis = RepositoryAnalysis(\n            repository_name=repository_name,\n            files=[],\n        )\n\n        for file_path in repository_path.rglob(\"*\"):\n\n            if not file_path.is_file():\n                continue\n\n            if file_path.suffix != \".py\":\n                continue\n\n            try:\n                file_analysis = self.parser.parse(file_path)\n                analysis.files.append(file_analysis)\n\n            except Exception as e:\n                print(f\"Skipping {file_path}: {e}\")\n\n        chunks = self.chunking_service.create_chunks(\n            analysis\n        )\n\n        print(f\"Number of chunks: {len(chunks)}\")\n\n        self.indexing_service.embed_chunks(\n            repository_name=repository_name,\n            chunks=chunks,\n        )\n\n        return analysis",
+                    "methods": [
+                        {
+                            "name": "__init__",
+                            "line_number": 11,
+                            "docstring": null,
+                            "source_code": "class AnalysisService:\n\n    def __init__(self):\n        self.parser = ParserService()\n        self.chunking_service = ChunkingService()\n        self.indexing_service = IndexingService()\n\n    def analyze_repository(\n        self,\n        repository_name: str,\n        repository_path: Path,\n    ) -> RepositoryAnalysis:\n\n        analysis = RepositoryAnalysis(\n            repository_name=repository_name,\n            files=[],\n        )\n\n        for file_path in repository_path.rglob(\"*\"):\n\n            if not file_path.is_file():\n                continue\n\n            if file_path.suffix != \".py\":\n                continue\n\n            try:\n                file_analysis = self.parser.parse(file_path)\n                analysis.files.append(file_analysis)\n\n            except Exception as e:\n                print(f\"Skipping {file_path}: {e}\")\n\n        chunks = self.chunking_service.create_chunks(\n            analysis\n        )\n\n        print(f\"Number of chunks: {len(chunks)}\")\n\n        self.indexing_service.embed_chunks(\n            repository_name=repository_name,\n            chunks=chunks,\n        )\n\n        return analysis"
+                        },
+                        {
+                            "name": "analyze_repository",
+                            "line_number": 16,
+                            "docstring": null,
+                            "source_code": "class AnalysisService:\n\n    def __init__(self):\n        self.parser = ParserService()\n        self.chunking_service = ChunkingService()\n        self.indexing_service = IndexingService()\n\n    def analyze_repository(\n        self,\n        repository_name: str,\n        repository_path: Path,\n    ) -> RepositoryAnalysis:\n\n        analysis = RepositoryAnalysis(\n            repository_name=repository_name,\n            files=[],\n        )\n\n        for file_path in repository_path.rglob(\"*\"):\n\n            if not file_path.is_file():\n                continue\n\n            if file_path.suffix != \".py\":\n                continue\n\n            try:\n                file_analysis = self.parser.parse(file_path)\n                analysis.files.append(file_analysis)\n\n            except Exception as e:\n                print(f\"Skipping {file_path}: {e}\")\n\n        chunks = self.chunking_service.create_chunks(\n            analysis\n        )\n\n        print(f\"Number of chunks: {len(chunks)}\")\n\n        self.indexing_service.embed_chunks(\n            repository_name=repository_name,\n            chunks=chunks,\n        )\n\n        return analysis"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\services\\chunking_service.py",
+            "imports": [
+                {
+                    "module": "app.schemas.analysis"
+                },
+                {
+                    "module": "app.schemas.chunk"
+                }
+            ],
+            "functions": [],
+            "classes": [
+                {
+                    "name": "ChunkingService",
+                    "line_number": 5,
+                    "docstring": null,
+                    "source_code": "class ChunkingService:\n\n    def create_chunks(\n        self,\n        analysis: RepositoryAnalysis,\n    ) -> list[CodeChunk]:\n\n        chunks = []\n\n        for file in analysis.files:\n            for class_info in file.classes:\n                chunks.append(\n                    CodeChunk(\n                        id=f\"{file.file_path}:{class_info.name}\",\n                        type=\"class\",\n                        name=class_info.name,\n                        file_path=file.file_path,\n                        source_code=class_info.source_code,\n                        docstring=class_info.docstring,\n                    )\n                )\n\n            for function_info in file.functions:\n                chunks.append(\n                    CodeChunk(\n                        id=f\"{file.file_path}:{function_info.name}\",\n                        type=\"function\",\n                        name=function_info.name,\n                        file_path=file.file_path,\n                        source_code=function_info.source_code,\n                        docstring=function_info.docstring,\n                    )\n                )\n\n        return chunks",
+                    "methods": [
+                        {
+                            "name": "create_chunks",
+                            "line_number": 7,
+                            "docstring": null,
+                            "source_code": "class ChunkingService:\n\n    def create_chunks(\n        self,\n        analysis: RepositoryAnalysis,\n    ) -> list[CodeChunk]:\n\n        chunks = []\n\n        for file in analysis.files:\n            for class_info in file.classes:\n                chunks.append(\n                    CodeChunk(\n                        id=f\"{file.file_path}:{class_info.name}\",\n                        type=\"class\",\n                        name=class_info.name,\n                        file_path=file.file_path,\n                        source_code=class_info.source_code,\n                        docstring=class_info.docstring,\n                    )\n                )\n\n            for function_info in file.functions:\n                chunks.append(\n                    CodeChunk(\n                        id=f\"{file.file_path}:{function_info.name}\",\n                        type=\"function\",\n                        name=function_info.name,\n                        file_path=file.file_path,\n                        source_code=function_info.source_code,\n                        docstring=function_info.docstring,\n                    )\n                )\n\n        return chunks"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\services\\conversation_service.py",
+            "imports": [
+                {
+                    "module": "app.services.retrieval_service"
+                },
+                {
+                    "module": "app.services.llm.llm_service"
+                },
+                {
+                    "module": "app.services.session_manager"
+                },
+                {
+                    "module": "app.schemas.chat"
+                }
+            ],
+            "functions": [],
+            "classes": [
+                {
+                    "name": "ConversationService",
+                    "line_number": 6,
+                    "docstring": null,
+                    "source_code": "class ConversationService:\n\n    def __init__(self):\n        self.retrieval_service = RetrievalService()\n        self.llm_service = LLMService()\n        self.session_manager = session_manager\n\n    def chat(self, request:ChatRequest) -> ChatResponse:\n\n        session_id = request.session_id\n\n        if session_id is None:\n            session_id = self.session_manager.create_session()\n\n        history = self.session_manager.get_history(session_id)\n\n        search_result = self.retrieval_service.search(\n            repository_name=request.repository_name,\n            query=request.question,\n            top_k=5,\n        )\n\n        answer = self.llm_service.answer_chat(\n            question=request.question,\n            history=history,\n            retrieved_chunks=search_result[\"results\"],\n        )\n\n        # Saving Conversation\n\n        # saving user's request\n        self.session_manager.add_message(\n            session_id=session_id,\n            message=ChatMessage(\n                role=MessageRole.USER,\n                content=request.question,\n            ),\n        )\n\n        # saving assistant's reply\n        self.session_manager.add_message(\n            session_id=session_id,\n            message=ChatMessage(\n                role=MessageRole.ASSISTANT,\n                content=answer,\n            ),\n        )\n\n        sources = list(dict.fromkeys(\n            chunk[\"file_path\"]\n            for chunk in search_result[\"results\"]\n        ))\n\n        return ChatResponse(\n            answer=answer,\n            session_id=session_id,\n            sources=sources,\n        )",
+                    "methods": [
+                        {
+                            "name": "__init__",
+                            "line_number": 8,
+                            "docstring": null,
+                            "source_code": "class ConversationService:\n\n    def __init__(self):\n        self.retrieval_service = RetrievalService()\n        self.llm_service = LLMService()\n        self.session_manager = session_manager\n\n    def chat(self, request:ChatRequest) -> ChatResponse:\n\n        session_id = request.session_id\n\n        if session_id is None:\n            session_id = self.session_manager.create_session()\n\n        history = self.session_manager.get_history(session_id)\n\n        search_result = self.retrieval_service.search(\n            repository_name=request.repository_name,\n            query=request.question,\n            top_k=5,\n        )\n\n        answer = self.llm_service.answer_chat(\n            question=request.question,\n            history=history,\n            retrieved_chunks=search_result[\"results\"],\n        )\n\n        # Saving Conversation\n\n        # saving user's request\n        self.session_manager.add_message(\n            session_id=session_id,\n            message=ChatMessage(\n                role=MessageRole.USER,\n                content=request.question,\n            ),\n        )\n\n        # saving assistant's reply\n        self.session_manager.add_message(\n            session_id=session_id,\n            message=ChatMessage(\n                role=MessageRole.ASSISTANT,\n                content=answer,\n            ),\n        )\n\n        sources = list(dict.fromkeys(\n            chunk[\"file_path\"]\n            for chunk in search_result[\"results\"]\n        ))\n\n        return ChatResponse(\n            answer=answer,\n            session_id=session_id,\n            sources=sources,\n        )"
+                        },
+                        {
+                            "name": "chat",
+                            "line_number": 13,
+                            "docstring": null,
+                            "source_code": "class ConversationService:\n\n    def __init__(self):\n        self.retrieval_service = RetrievalService()\n        self.llm_service = LLMService()\n        self.session_manager = session_manager\n\n    def chat(self, request:ChatRequest) -> ChatResponse:\n\n        session_id = request.session_id\n\n        if session_id is None:\n            session_id = self.session_manager.create_session()\n\n        history = self.session_manager.get_history(session_id)\n\n        search_result = self.retrieval_service.search(\n            repository_name=request.repository_name,\n            query=request.question,\n            top_k=5,\n        )\n\n        answer = self.llm_service.answer_chat(\n            question=request.question,\n            history=history,\n            retrieved_chunks=search_result[\"results\"],\n        )\n\n        # Saving Conversation\n\n        # saving user's request\n        self.session_manager.add_message(\n            session_id=session_id,\n            message=ChatMessage(\n                role=MessageRole.USER,\n                content=request.question,\n            ),\n        )\n\n        # saving assistant's reply\n        self.session_manager.add_message(\n            session_id=session_id,\n            message=ChatMessage(\n                role=MessageRole.ASSISTANT,\n                content=answer,\n            ),\n        )\n\n        sources = list(dict.fromkeys(\n            chunk[\"file_path\"]\n            for chunk in search_result[\"results\"]\n        ))\n\n        return ChatResponse(\n            answer=answer,\n            session_id=session_id,\n            sources=sources,\n        )"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\services\\embedding_service.py",
+            "imports": [
+                {
+                    "module": "sentence_transformers"
+                }
+            ],
+            "functions": [],
+            "classes": [
+                {
+                    "name": "EmbeddingService",
+                    "line_number": 4,
+                    "docstring": null,
+                    "source_code": "class EmbeddingService:\n\n    def __init__(self):\n\n        self.model = SentenceTransformer(\n            \"BAAI/bge-small-en-v1.5\"\n        )\n\n    def embed(self, text: str) -> list[float]:\n\n        embedding = self.model.encode(\n            text,\n            normalize_embeddings=True,\n        )\n\n        return embedding.tolist()\n\n    def embed_batch(\n    self,\n    texts: list[str],\n    ) -> list[list[float]]:\n\n        embeddings = self.model.encode(\n            texts,\n            batch_size=32,\n            normalize_embeddings=True,\n            show_progress_bar=True,\n        )\n\n        return embeddings.tolist()",
+                    "methods": [
+                        {
+                            "name": "__init__",
+                            "line_number": 6,
+                            "docstring": null,
+                            "source_code": "class EmbeddingService:\n\n    def __init__(self):\n\n        self.model = SentenceTransformer(\n            \"BAAI/bge-small-en-v1.5\"\n        )\n\n    def embed(self, text: str) -> list[float]:\n\n        embedding = self.model.encode(\n            text,\n            normalize_embeddings=True,\n        )\n\n        return embedding.tolist()\n\n    def embed_batch(\n    self,\n    texts: list[str],\n    ) -> list[list[float]]:\n\n        embeddings = self.model.encode(\n            texts,\n            batch_size=32,\n            normalize_embeddings=True,\n            show_progress_bar=True,\n        )\n\n        return embeddings.tolist()"
+                        },
+                        {
+                            "name": "embed",
+                            "line_number": 12,
+                            "docstring": null,
+                            "source_code": "class EmbeddingService:\n\n    def __init__(self):\n\n        self.model = SentenceTransformer(\n            \"BAAI/bge-small-en-v1.5\"\n        )\n\n    def embed(self, text: str) -> list[float]:\n\n        embedding = self.model.encode(\n            text,\n            normalize_embeddings=True,\n        )\n\n        return embedding.tolist()\n\n    def embed_batch(\n    self,\n    texts: list[str],\n    ) -> list[list[float]]:\n\n        embeddings = self.model.encode(\n            texts,\n            batch_size=32,\n            normalize_embeddings=True,\n            show_progress_bar=True,\n        )\n\n        return embeddings.tolist()"
+                        },
+                        {
+                            "name": "embed_batch",
+                            "line_number": 21,
+                            "docstring": null,
+                            "source_code": "class EmbeddingService:\n\n    def __init__(self):\n\n        self.model = SentenceTransformer(\n            \"BAAI/bge-small-en-v1.5\"\n        )\n\n    def embed(self, text: str) -> list[float]:\n\n        embedding = self.model.encode(\n            text,\n            normalize_embeddings=True,\n        )\n\n        return embedding.tolist()\n\n    def embed_batch(\n    self,\n    texts: list[str],\n    ) -> list[list[float]]:\n\n        embeddings = self.model.encode(\n            texts,\n            batch_size=32,\n            normalize_embeddings=True,\n            show_progress_bar=True,\n        )\n\n        return embeddings.tolist()"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\services\\indexing_service.py",
+            "imports": [
+                {
+                    "module": "app.schemas.embedding"
+                },
+                {
+                    "module": "app.schemas.chunk"
+                },
+                {
+                    "module": "app.services.embedding_service"
+                },
+                {
+                    "module": "app.services.vector_store_service"
+                },
+                {
+                    "module": "app.services.metadata_service"
+                },
+                {
+                    "module": "pathlib"
+                },
+                {
+                    "module": "app.core.config"
+                }
+            ],
+            "functions": [],
+            "classes": [
+                {
+                    "name": "IndexingService",
+                    "line_number": 9,
+                    "docstring": null,
+                    "source_code": "class IndexingService:\n\n    def __init__(self):\n        self.embedding_service = EmbeddingService()\n        self.vector_store = VectorStoreService()\n        self.metadata_service = MetadataService()\n\n    def embed_chunks(\n        self,\n        repository_name:str,\n        chunks: list[CodeChunk],\n    ) -> list[EmbeddedChunk]:\n\n        embedded_chunks = []\n\n        texts = [\n            chunk.source_code\n            for chunk in chunks\n        ]\n\n        print(\"Started embdeddings...\")\n\n        embeddings = self.embedding_service.embed_batch(\n            texts\n        )\n\n        print(\"Embeddings completed.\")\n\n        dimension = len(embeddings[0])\n\n        self.vector_store.create_index(dimension)\n\n        self.vector_store.add_embeddings(embeddings)\n\n        Path(settings.FAISS_STORAGE_DIR).mkdir(\n            parents=True,\n            exist_ok=True,\n        )\n\n        index_path = (\n            Path(settings.FAISS_STORAGE_DIR)\n            / f\"{repository_name}.index\"\n        )\n\n        self.vector_store.save(str(index_path))\n\n        embedded_chunks = []\n\n        for chunk, embedding in zip(\n            chunks,\n            embeddings,\n        ):\n\n            embedded_chunks.append(\n                EmbeddedChunk(\n                    chunk=chunk,\n                    embedding=embedding,\n                )\n            )\n\n        self.metadata_service.save_metadata(\n                    repository_name,\n                    embedded_chunks,\n        )\n\n        return embedded_chunks",
+                    "methods": [
+                        {
+                            "name": "__init__",
+                            "line_number": 11,
+                            "docstring": null,
+                            "source_code": "class IndexingService:\n\n    def __init__(self):\n        self.embedding_service = EmbeddingService()\n        self.vector_store = VectorStoreService()\n        self.metadata_service = MetadataService()\n\n    def embed_chunks(\n        self,\n        repository_name:str,\n        chunks: list[CodeChunk],\n    ) -> list[EmbeddedChunk]:\n\n        embedded_chunks = []\n\n        texts = [\n            chunk.source_code\n            for chunk in chunks\n        ]\n\n        print(\"Started embdeddings...\")\n\n        embeddings = self.embedding_service.embed_batch(\n            texts\n        )\n\n        print(\"Embeddings completed.\")\n\n        dimension = len(embeddings[0])\n\n        self.vector_store.create_index(dimension)\n\n        self.vector_store.add_embeddings(embeddings)\n\n        Path(settings.FAISS_STORAGE_DIR).mkdir(\n            parents=True,\n            exist_ok=True,\n        )\n\n        index_path = (\n            Path(settings.FAISS_STORAGE_DIR)\n            / f\"{repository_name}.index\"\n        )\n\n        self.vector_store.save(str(index_path))\n\n        embedded_chunks = []\n\n        for chunk, embedding in zip(\n            chunks,\n            embeddings,\n        ):\n\n            embedded_chunks.append(\n                EmbeddedChunk(\n                    chunk=chunk,\n                    embedding=embedding,\n                )\n            )\n\n        self.metadata_service.save_metadata(\n                    repository_name,\n                    embedded_chunks,\n        )\n\n        return embedded_chunks"
+                        },
+                        {
+                            "name": "embed_chunks",
+                            "line_number": 16,
+                            "docstring": null,
+                            "source_code": "class IndexingService:\n\n    def __init__(self):\n        self.embedding_service = EmbeddingService()\n        self.vector_store = VectorStoreService()\n        self.metadata_service = MetadataService()\n\n    def embed_chunks(\n        self,\n        repository_name:str,\n        chunks: list[CodeChunk],\n    ) -> list[EmbeddedChunk]:\n\n        embedded_chunks = []\n\n        texts = [\n            chunk.source_code\n            for chunk in chunks\n        ]\n\n        print(\"Started embdeddings...\")\n\n        embeddings = self.embedding_service.embed_batch(\n            texts\n        )\n\n        print(\"Embeddings completed.\")\n\n        dimension = len(embeddings[0])\n\n        self.vector_store.create_index(dimension)\n\n        self.vector_store.add_embeddings(embeddings)\n\n        Path(settings.FAISS_STORAGE_DIR).mkdir(\n            parents=True,\n            exist_ok=True,\n        )\n\n        index_path = (\n            Path(settings.FAISS_STORAGE_DIR)\n            / f\"{repository_name}.index\"\n        )\n\n        self.vector_store.save(str(index_path))\n\n        embedded_chunks = []\n\n        for chunk, embedding in zip(\n            chunks,\n            embeddings,\n        ):\n\n            embedded_chunks.append(\n                EmbeddedChunk(\n                    chunk=chunk,\n                    embedding=embedding,\n                )\n            )\n\n        self.metadata_service.save_metadata(\n                    repository_name,\n                    embedded_chunks,\n        )\n\n        return embedded_chunks"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\services\\metadata_service.py",
+            "imports": [
+                {
+                    "module": "pathlib"
+                },
+                {
+                    "module": "json"
+                },
+                {
+                    "module": "app.core.config"
+                },
+                {
+                    "module": "app.schemas.embedding"
+                },
+                {
+                    "module": "app.schemas.metadata"
+                }
+            ],
+            "functions": [],
+            "classes": [
+                {
+                    "name": "MetadataService",
+                    "line_number": 9,
+                    "docstring": null,
+                    "source_code": "class MetadataService:\n\n    def __init__(self):\n\n        Path(settings.METADATA_STORAGE_DIR).mkdir(\n            parents=True,\n            exist_ok=True,\n        )\n\n    def save_metadata(\n    self,\n    repository_name: str,\n    embedded_chunks: list[EmbeddedChunk],\n    ) -> None:\n            \"\"\"\n            Save metadata for all indexed chunks.\n            \"\"\"\n\n            entries = []\n\n            for idx, embedded_chunk in enumerate(embedded_chunks):\n\n                entries.append(\n                    MetadataEntry(\n                        id=idx,\n                        chunk=embedded_chunk.chunk,\n                    )\n                )\n\n            metadata = MetadataFile(entries=entries)\n\n            metadata_path = (\n                Path(settings.METADATA_STORAGE_DIR)\n                / f\"{repository_name}.json\"\n            )\n\n            with open(metadata_path, \"w\", encoding=\"utf-8\") as f:\n\n                json.dump(\n                    metadata.model_dump(),\n                    f,\n                    indent=4,\n                    ensure_ascii=False,\n                )\n\n    def load_metadata(\n        self,\n        repository_name: str,\n    ) -> MetadataFile:\n        # Load metadata for a repository.\n\n        metadata_path = (\n            Path(settings.METADATA_STORAGE_DIR)\n                / f\"{repository_name}.json\"\n            )\n\n        with open(metadata_path, \"r\", encoding=\"utf-8\") as f:\n            metadata = json.load(f)\n\n        return MetadataFile.model_validate(metadata)\n\n    def get_chunk_by_id(\n    self,\n    repository_name: str,\n    chunk_id: int,\n    ):\n        # Retrieve a chunk by its metadata ID.\n\n        metadata = self.load_metadata(repository_name)\n\n        for entry in metadata.entries:\n            if entry.id == chunk_id:\n                return entry\n\n        return None\n\n    def get_chunks_by_ids(\n    self,\n    repository_name: str,\n    chunk_ids: list[int],\n    ):\n    # Retrieve multiple chunks by their IDs.\n\n        metadata = self.load_metadata(repository_name)\n\n        chunk_map = {\n            entry.id: entry\n            for entry in metadata.entries\n        }\n\n        return [\n            chunk_map[idx]\n            for idx in chunk_ids\n            if idx in chunk_map\n        ]",
+                    "methods": [
+                        {
+                            "name": "__init__",
+                            "line_number": 11,
+                            "docstring": null,
+                            "source_code": "class MetadataService:\n\n    def __init__(self):\n\n        Path(settings.METADATA_STORAGE_DIR).mkdir(\n            parents=True,\n            exist_ok=True,\n        )\n\n    def save_metadata(\n    self,\n    repository_name: str,\n    embedded_chunks: list[EmbeddedChunk],\n    ) -> None:\n            \"\"\"\n            Save metadata for all indexed chunks.\n            \"\"\"\n\n            entries = []\n\n            for idx, embedded_chunk in enumerate(embedded_chunks):\n\n                entries.append(\n                    MetadataEntry(\n                        id=idx,\n                        chunk=embedded_chunk.chunk,\n                    )\n                )\n\n            metadata = MetadataFile(entries=entries)\n\n            metadata_path = (\n                Path(settings.METADATA_STORAGE_DIR)\n                / f\"{repository_name}.json\"\n            )\n\n            with open(metadata_path, \"w\", encoding=\"utf-8\") as f:\n\n                json.dump(\n                    metadata.model_dump(),\n                    f,\n                    indent=4,\n                    ensure_ascii=False,\n                )\n\n    def load_metadata(\n        self,\n        repository_name: str,\n    ) -> MetadataFile:\n        # Load metadata for a repository.\n\n        metadata_path = (\n            Path(settings.METADATA_STORAGE_DIR)\n                / f\"{repository_name}.json\"\n            )\n\n        with open(metadata_path, \"r\", encoding=\"utf-8\") as f:\n            metadata = json.load(f)\n\n        return MetadataFile.model_validate(metadata)\n\n    def get_chunk_by_id(\n    self,\n    repository_name: str,\n    chunk_id: int,\n    ):\n        # Retrieve a chunk by its metadata ID.\n\n        metadata = self.load_metadata(repository_name)\n\n        for entry in metadata.entries:\n            if entry.id == chunk_id:\n                return entry\n\n        return None\n\n    def get_chunks_by_ids(\n    self,\n    repository_name: str,\n    chunk_ids: list[int],\n    ):\n    # Retrieve multiple chunks by their IDs.\n\n        metadata = self.load_metadata(repository_name)\n\n        chunk_map = {\n            entry.id: entry\n            for entry in metadata.entries\n        }\n\n        return [\n            chunk_map[idx]\n            for idx in chunk_ids\n            if idx in chunk_map\n        ]"
+                        },
+                        {
+                            "name": "save_metadata",
+                            "line_number": 18,
+                            "docstring": "Save metadata for all indexed chunks.",
+                            "source_code": "class MetadataService:\n\n    def __init__(self):\n\n        Path(settings.METADATA_STORAGE_DIR).mkdir(\n            parents=True,\n            exist_ok=True,\n        )\n\n    def save_metadata(\n    self,\n    repository_name: str,\n    embedded_chunks: list[EmbeddedChunk],\n    ) -> None:\n            \"\"\"\n            Save metadata for all indexed chunks.\n            \"\"\"\n\n            entries = []\n\n            for idx, embedded_chunk in enumerate(embedded_chunks):\n\n                entries.append(\n                    MetadataEntry(\n                        id=idx,\n                        chunk=embedded_chunk.chunk,\n                    )\n                )\n\n            metadata = MetadataFile(entries=entries)\n\n            metadata_path = (\n                Path(settings.METADATA_STORAGE_DIR)\n                / f\"{repository_name}.json\"\n            )\n\n            with open(metadata_path, \"w\", encoding=\"utf-8\") as f:\n\n                json.dump(\n                    metadata.model_dump(),\n                    f,\n                    indent=4,\n                    ensure_ascii=False,\n                )\n\n    def load_metadata(\n        self,\n        repository_name: str,\n    ) -> MetadataFile:\n        # Load metadata for a repository.\n\n        metadata_path = (\n            Path(settings.METADATA_STORAGE_DIR)\n                / f\"{repository_name}.json\"\n            )\n\n        with open(metadata_path, \"r\", encoding=\"utf-8\") as f:\n            metadata = json.load(f)\n\n        return MetadataFile.model_validate(metadata)\n\n    def get_chunk_by_id(\n    self,\n    repository_name: str,\n    chunk_id: int,\n    ):\n        # Retrieve a chunk by its metadata ID.\n\n        metadata = self.load_metadata(repository_name)\n\n        for entry in metadata.entries:\n            if entry.id == chunk_id:\n                return entry\n\n        return None\n\n    def get_chunks_by_ids(\n    self,\n    repository_name: str,\n    chunk_ids: list[int],\n    ):\n    # Retrieve multiple chunks by their IDs.\n\n        metadata = self.load_metadata(repository_name)\n\n        chunk_map = {\n            entry.id: entry\n            for entry in metadata.entries\n        }\n\n        return [\n            chunk_map[idx]\n            for idx in chunk_ids\n            if idx in chunk_map\n        ]"
+                        },
+                        {
+                            "name": "load_metadata",
+                            "line_number": 54,
+                            "docstring": null,
+                            "source_code": "class MetadataService:\n\n    def __init__(self):\n\n        Path(settings.METADATA_STORAGE_DIR).mkdir(\n            parents=True,\n            exist_ok=True,\n        )\n\n    def save_metadata(\n    self,\n    repository_name: str,\n    embedded_chunks: list[EmbeddedChunk],\n    ) -> None:\n            \"\"\"\n            Save metadata for all indexed chunks.\n            \"\"\"\n\n            entries = []\n\n            for idx, embedded_chunk in enumerate(embedded_chunks):\n\n                entries.append(\n                    MetadataEntry(\n                        id=idx,\n                        chunk=embedded_chunk.chunk,\n                    )\n                )\n\n            metadata = MetadataFile(entries=entries)\n\n            metadata_path = (\n                Path(settings.METADATA_STORAGE_DIR)\n                / f\"{repository_name}.json\"\n            )\n\n            with open(metadata_path, \"w\", encoding=\"utf-8\") as f:\n\n                json.dump(\n                    metadata.model_dump(),\n                    f,\n                    indent=4,\n                    ensure_ascii=False,\n                )\n\n    def load_metadata(\n        self,\n        repository_name: str,\n    ) -> MetadataFile:\n        # Load metadata for a repository.\n\n        metadata_path = (\n            Path(settings.METADATA_STORAGE_DIR)\n                / f\"{repository_name}.json\"\n            )\n\n        with open(metadata_path, \"r\", encoding=\"utf-8\") as f:\n            metadata = json.load(f)\n\n        return MetadataFile.model_validate(metadata)\n\n    def get_chunk_by_id(\n    self,\n    repository_name: str,\n    chunk_id: int,\n    ):\n        # Retrieve a chunk by its metadata ID.\n\n        metadata = self.load_metadata(repository_name)\n\n        for entry in metadata.entries:\n            if entry.id == chunk_id:\n                return entry\n\n        return None\n\n    def get_chunks_by_ids(\n    self,\n    repository_name: str,\n    chunk_ids: list[int],\n    ):\n    # Retrieve multiple chunks by their IDs.\n\n        metadata = self.load_metadata(repository_name)\n\n        chunk_map = {\n            entry.id: entry\n            for entry in metadata.entries\n        }\n\n        return [\n            chunk_map[idx]\n            for idx in chunk_ids\n            if idx in chunk_map\n        ]"
+                        },
+                        {
+                            "name": "get_chunk_by_id",
+                            "line_number": 70,
+                            "docstring": null,
+                            "source_code": "class MetadataService:\n\n    def __init__(self):\n\n        Path(settings.METADATA_STORAGE_DIR).mkdir(\n            parents=True,\n            exist_ok=True,\n        )\n\n    def save_metadata(\n    self,\n    repository_name: str,\n    embedded_chunks: list[EmbeddedChunk],\n    ) -> None:\n            \"\"\"\n            Save metadata for all indexed chunks.\n            \"\"\"\n\n            entries = []\n\n            for idx, embedded_chunk in enumerate(embedded_chunks):\n\n                entries.append(\n                    MetadataEntry(\n                        id=idx,\n                        chunk=embedded_chunk.chunk,\n                    )\n                )\n\n            metadata = MetadataFile(entries=entries)\n\n            metadata_path = (\n                Path(settings.METADATA_STORAGE_DIR)\n                / f\"{repository_name}.json\"\n            )\n\n            with open(metadata_path, \"w\", encoding=\"utf-8\") as f:\n\n                json.dump(\n                    metadata.model_dump(),\n                    f,\n                    indent=4,\n                    ensure_ascii=False,\n                )\n\n    def load_metadata(\n        self,\n        repository_name: str,\n    ) -> MetadataFile:\n        # Load metadata for a repository.\n\n        metadata_path = (\n            Path(settings.METADATA_STORAGE_DIR)\n                / f\"{repository_name}.json\"\n            )\n\n        with open(metadata_path, \"r\", encoding=\"utf-8\") as f:\n            metadata = json.load(f)\n\n        return MetadataFile.model_validate(metadata)\n\n    def get_chunk_by_id(\n    self,\n    repository_name: str,\n    chunk_id: int,\n    ):\n        # Retrieve a chunk by its metadata ID.\n\n        metadata = self.load_metadata(repository_name)\n\n        for entry in metadata.entries:\n            if entry.id == chunk_id:\n                return entry\n\n        return None\n\n    def get_chunks_by_ids(\n    self,\n    repository_name: str,\n    chunk_ids: list[int],\n    ):\n    # Retrieve multiple chunks by their IDs.\n\n        metadata = self.load_metadata(repository_name)\n\n        chunk_map = {\n            entry.id: entry\n            for entry in metadata.entries\n        }\n\n        return [\n            chunk_map[idx]\n            for idx in chunk_ids\n            if idx in chunk_map\n        ]"
+                        },
+                        {
+                            "name": "get_chunks_by_ids",
+                            "line_number": 85,
+                            "docstring": null,
+                            "source_code": "class MetadataService:\n\n    def __init__(self):\n\n        Path(settings.METADATA_STORAGE_DIR).mkdir(\n            parents=True,\n            exist_ok=True,\n        )\n\n    def save_metadata(\n    self,\n    repository_name: str,\n    embedded_chunks: list[EmbeddedChunk],\n    ) -> None:\n            \"\"\"\n            Save metadata for all indexed chunks.\n            \"\"\"\n\n            entries = []\n\n            for idx, embedded_chunk in enumerate(embedded_chunks):\n\n                entries.append(\n                    MetadataEntry(\n                        id=idx,\n                        chunk=embedded_chunk.chunk,\n                    )\n                )\n\n            metadata = MetadataFile(entries=entries)\n\n            metadata_path = (\n                Path(settings.METADATA_STORAGE_DIR)\n                / f\"{repository_name}.json\"\n            )\n\n            with open(metadata_path, \"w\", encoding=\"utf-8\") as f:\n\n                json.dump(\n                    metadata.model_dump(),\n                    f,\n                    indent=4,\n                    ensure_ascii=False,\n                )\n\n    def load_metadata(\n        self,\n        repository_name: str,\n    ) -> MetadataFile:\n        # Load metadata for a repository.\n\n        metadata_path = (\n            Path(settings.METADATA_STORAGE_DIR)\n                / f\"{repository_name}.json\"\n            )\n\n        with open(metadata_path, \"r\", encoding=\"utf-8\") as f:\n            metadata = json.load(f)\n\n        return MetadataFile.model_validate(metadata)\n\n    def get_chunk_by_id(\n    self,\n    repository_name: str,\n    chunk_id: int,\n    ):\n        # Retrieve a chunk by its metadata ID.\n\n        metadata = self.load_metadata(repository_name)\n\n        for entry in metadata.entries:\n            if entry.id == chunk_id:\n                return entry\n\n        return None\n\n    def get_chunks_by_ids(\n    self,\n    repository_name: str,\n    chunk_ids: list[int],\n    ):\n    # Retrieve multiple chunks by their IDs.\n\n        metadata = self.load_metadata(repository_name)\n\n        chunk_map = {\n            entry.id: entry\n            for entry in metadata.entries\n        }\n\n        return [\n            chunk_map[idx]\n            for idx in chunk_ids\n            if idx in chunk_map\n        ]"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\services\\question_answer_service.py",
+            "imports": [
+                {
+                    "module": "app.services.retrieval_service"
+                },
+                {
+                    "module": "app.services.llm.llm_service"
+                }
+            ],
+            "functions": [],
+            "classes": [
+                {
+                    "name": "QuestionAnswerService",
+                    "line_number": 4,
+                    "docstring": null,
+                    "source_code": "class QuestionAnswerService:\n\n    def __init__(self):\n        self.retriever=RetrievalService()\n        self.llm=LLMService()\n\n    def answer_question(\n        self,\n        repository_name: str,\n        question: str,\n        top_k: int=5\n    ):\n        search_result = self.retriever.search(\n            repository_name=repository_name,\n            query=question,\n            top_k=top_k,\n        )\n\n        llm_answer = self.llm.answer_question(\n            question=question,\n            retrieved_chunks=search_result[\"results\"],\n        )\n\n        return {\n            \"question\":question,\n            \"answer\":llm_answer,\n            \"sources\":search_result[\"results\"],\n        }",
+                    "methods": [
+                        {
+                            "name": "__init__",
+                            "line_number": 6,
+                            "docstring": null,
+                            "source_code": "class QuestionAnswerService:\n\n    def __init__(self):\n        self.retriever=RetrievalService()\n        self.llm=LLMService()\n\n    def answer_question(\n        self,\n        repository_name: str,\n        question: str,\n        top_k: int=5\n    ):\n        search_result = self.retriever.search(\n            repository_name=repository_name,\n            query=question,\n            top_k=top_k,\n        )\n\n        llm_answer = self.llm.answer_question(\n            question=question,\n            retrieved_chunks=search_result[\"results\"],\n        )\n\n        return {\n            \"question\":question,\n            \"answer\":llm_answer,\n            \"sources\":search_result[\"results\"],\n        }"
+                        },
+                        {
+                            "name": "answer_question",
+                            "line_number": 10,
+                            "docstring": null,
+                            "source_code": "class QuestionAnswerService:\n\n    def __init__(self):\n        self.retriever=RetrievalService()\n        self.llm=LLMService()\n\n    def answer_question(\n        self,\n        repository_name: str,\n        question: str,\n        top_k: int=5\n    ):\n        search_result = self.retriever.search(\n            repository_name=repository_name,\n            query=question,\n            top_k=top_k,\n        )\n\n        llm_answer = self.llm.answer_question(\n            question=question,\n            retrieved_chunks=search_result[\"results\"],\n        )\n\n        return {\n            \"question\":question,\n            \"answer\":llm_answer,\n            \"sources\":search_result[\"results\"],\n        }"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\services\\repository_service.py",
+            "imports": [
+                {
+                    "module": "pathlib"
+                },
+                {
+                    "module": "git"
+                },
+                {
+                    "module": "git.exc"
+                },
+                {
+                    "module": "app.core.logger"
+                }
+            ],
+            "functions": [],
+            "classes": [
+                {
+                    "name": "RepositoryService",
+                    "line_number": 8,
+                    "docstring": null,
+                    "source_code": "class RepositoryService:\n\n    @staticmethod\n    def get_repository_path(repository_name: str, upload_dir: str) -> Path:\n        return Path(upload_dir) / repository_name\n\n    @staticmethod\n    def clone_repository(repo_url: str, upload_dir: str):\n\n        repo_name = repo_url.rstrip(\"/\").split(\"/\")[-1]\n\n        destination = Path(upload_dir) / repo_name\n\n        if destination.exists():\n            return {\n                \"success\": False,\n                \"message\": \"Repository already exists.\",\n                \"repository_name\": repo_name,\n            }\n\n        try:\n\n            logger.info(f\"Cloning repository: {repo_url}\")\n\n            Repo.clone_from(repo_url, destination)\n\n            logger.info(f\"Repository cloned: {repo_name}\")\n\n            return {\n                \"success\": True,\n                \"message\": \"Repository cloned successfully.\",\n                \"repository_name\": repo_name,\n            }\n\n        except GitCommandError as e:\n\n            return {\n                \"success\": False,\n                \"message\": f\"Git clone failed: {e}\",\n                \"repository_name\": repo_name,\n            }\n\n        except Exception as e:\n\n            logger.error(e)\n\n            return {\n                \"success\": False,\n                \"message\": str(e),\n                \"repository_name\": repo_name,\n            }",
+                    "methods": [
+                        {
+                            "name": "get_repository_path",
+                            "line_number": 11,
+                            "docstring": null,
+                            "source_code": "class RepositoryService:\n\n    @staticmethod\n    def get_repository_path(repository_name: str, upload_dir: str) -> Path:\n        return Path(upload_dir) / repository_name\n\n    @staticmethod\n    def clone_repository(repo_url: str, upload_dir: str):\n\n        repo_name = repo_url.rstrip(\"/\").split(\"/\")[-1]\n\n        destination = Path(upload_dir) / repo_name\n\n        if destination.exists():\n            return {\n                \"success\": False,\n                \"message\": \"Repository already exists.\",\n                \"repository_name\": repo_name,\n            }\n\n        try:\n\n            logger.info(f\"Cloning repository: {repo_url}\")\n\n            Repo.clone_from(repo_url, destination)\n\n            logger.info(f\"Repository cloned: {repo_name}\")\n\n            return {\n                \"success\": True,\n                \"message\": \"Repository cloned successfully.\",\n                \"repository_name\": repo_name,\n            }\n\n        except GitCommandError as e:\n\n            return {\n                \"success\": False,\n                \"message\": f\"Git clone failed: {e}\",\n                \"repository_name\": repo_name,\n            }\n\n        except Exception as e:\n\n            logger.error(e)\n\n            return {\n                \"success\": False,\n                \"message\": str(e),\n                \"repository_name\": repo_name,\n            }"
+                        },
+                        {
+                            "name": "clone_repository",
+                            "line_number": 15,
+                            "docstring": null,
+                            "source_code": "class RepositoryService:\n\n    @staticmethod\n    def get_repository_path(repository_name: str, upload_dir: str) -> Path:\n        return Path(upload_dir) / repository_name\n\n    @staticmethod\n    def clone_repository(repo_url: str, upload_dir: str):\n\n        repo_name = repo_url.rstrip(\"/\").split(\"/\")[-1]\n\n        destination = Path(upload_dir) / repo_name\n\n        if destination.exists():\n            return {\n                \"success\": False,\n                \"message\": \"Repository already exists.\",\n                \"repository_name\": repo_name,\n            }\n\n        try:\n\n            logger.info(f\"Cloning repository: {repo_url}\")\n\n            Repo.clone_from(repo_url, destination)\n\n            logger.info(f\"Repository cloned: {repo_name}\")\n\n            return {\n                \"success\": True,\n                \"message\": \"Repository cloned successfully.\",\n                \"repository_name\": repo_name,\n            }\n\n        except GitCommandError as e:\n\n            return {\n                \"success\": False,\n                \"message\": f\"Git clone failed: {e}\",\n                \"repository_name\": repo_name,\n            }\n\n        except Exception as e:\n\n            logger.error(e)\n\n            return {\n                \"success\": False,\n                \"message\": str(e),\n                \"repository_name\": repo_name,\n            }"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\services\\retrieval_service.py",
+            "imports": [
+                {
+                    "module": "app.services.embedding_service"
+                },
+                {
+                    "module": "app.services.vector_store_service"
+                },
+                {
+                    "module": "app.services.metadata_service"
+                },
+                {
+                    "module": "numpy"
+                },
+                {
+                    "module": "pathlib"
+                },
+                {
+                    "module": "app.core.config"
+                }
+            ],
+            "functions": [],
+            "classes": [
+                {
+                    "name": "RetrievalService",
+                    "line_number": 9,
+                    "docstring": null,
+                    "source_code": "class RetrievalService:\n    def __init__(self):\n        self.embedding_service = EmbeddingService()\n        self.vector_store_service = VectorStoreService()\n        self.metadata_service = MetadataService()\n\n    def search(\n        self,\n        repository_name: str,\n        query: str,\n        top_k: int = 5,\n        ):\n            #Perform semantic search over the indexed repository.\n            \n            # Generate embedding for the query\n            query_embedding = self.embedding_service.embed(query)\n\n            index_path = (\n                Path(settings.FAISS_STORAGE_DIR)\n                / f\"{repository_name}.index\"\n            )\n\n            self.vector_store_service.load(str(index_path))\n\n            # Search the vector index\n            distances, indices = self.vector_store_service.search(\n                query_embedding=query_embedding,\n                top_k=top_k,\n            )\n\n            # Retrieve metadata\n            results = []\n\n            for score, chunk_id in zip(\n                distances[0],\n                indices[0],\n            ):\n\n                if chunk_id == -1:\n                    continue\n\n                entry = self.metadata_service.get_chunk_by_id(\n                    repository_name,\n                    int(chunk_id),\n                )\n\n                if entry is None:\n                    continue\n\n                results.append(\n                    {\n                        \"score\": float(score),\n                        \"file_path\": entry.chunk.file_path,\n                        \"chunk_type\": entry.chunk.type,\n                        \"chunk_name\": entry.chunk.name,\n                        \"content\": entry.chunk.source_code,\n                    }\n                )\n\n            return {\n                \"query\": query,\n                \"results\": results,\n            }",
+                    "methods": [
+                        {
+                            "name": "__init__",
+                            "line_number": 10,
+                            "docstring": null,
+                            "source_code": "class RetrievalService:\n    def __init__(self):\n        self.embedding_service = EmbeddingService()\n        self.vector_store_service = VectorStoreService()\n        self.metadata_service = MetadataService()\n\n    def search(\n        self,\n        repository_name: str,\n        query: str,\n        top_k: int = 5,\n        ):\n            #Perform semantic search over the indexed repository.\n            \n            # Generate embedding for the query\n            query_embedding = self.embedding_service.embed(query)\n\n            index_path = (\n                Path(settings.FAISS_STORAGE_DIR)\n                / f\"{repository_name}.index\"\n            )\n\n            self.vector_store_service.load(str(index_path))\n\n            # Search the vector index\n            distances, indices = self.vector_store_service.search(\n                query_embedding=query_embedding,\n                top_k=top_k,\n            )\n\n            # Retrieve metadata\n            results = []\n\n            for score, chunk_id in zip(\n                distances[0],\n                indices[0],\n            ):\n\n                if chunk_id == -1:\n                    continue\n\n                entry = self.metadata_service.get_chunk_by_id(\n                    repository_name,\n                    int(chunk_id),\n                )\n\n                if entry is None:\n                    continue\n\n                results.append(\n                    {\n                        \"score\": float(score),\n                        \"file_path\": entry.chunk.file_path,\n                        \"chunk_type\": entry.chunk.type,\n                        \"chunk_name\": entry.chunk.name,\n                        \"content\": entry.chunk.source_code,\n                    }\n                )\n\n            return {\n                \"query\": query,\n                \"results\": results,\n            }"
+                        },
+                        {
+                            "name": "search",
+                            "line_number": 15,
+                            "docstring": null,
+                            "source_code": "class RetrievalService:\n    def __init__(self):\n        self.embedding_service = EmbeddingService()\n        self.vector_store_service = VectorStoreService()\n        self.metadata_service = MetadataService()\n\n    def search(\n        self,\n        repository_name: str,\n        query: str,\n        top_k: int = 5,\n        ):\n            #Perform semantic search over the indexed repository.\n            \n            # Generate embedding for the query\n            query_embedding = self.embedding_service.embed(query)\n\n            index_path = (\n                Path(settings.FAISS_STORAGE_DIR)\n                / f\"{repository_name}.index\"\n            )\n\n            self.vector_store_service.load(str(index_path))\n\n            # Search the vector index\n            distances, indices = self.vector_store_service.search(\n                query_embedding=query_embedding,\n                top_k=top_k,\n            )\n\n            # Retrieve metadata\n            results = []\n\n            for score, chunk_id in zip(\n                distances[0],\n                indices[0],\n            ):\n\n                if chunk_id == -1:\n                    continue\n\n                entry = self.metadata_service.get_chunk_by_id(\n                    repository_name,\n                    int(chunk_id),\n                )\n\n                if entry is None:\n                    continue\n\n                results.append(\n                    {\n                        \"score\": float(score),\n                        \"file_path\": entry.chunk.file_path,\n                        \"chunk_type\": entry.chunk.type,\n                        \"chunk_name\": entry.chunk.name,\n                        \"content\": entry.chunk.source_code,\n                    }\n                )\n\n            return {\n                \"query\": query,\n                \"results\": results,\n            }"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\services\\scanner_service.py",
+            "imports": [
+                {
+                    "module": "pathlib"
+                },
+                {
+                    "module": "app.schemas.file"
+                }
+            ],
+            "functions": [],
+            "classes": [
+                {
+                    "name": "ScannerService",
+                    "line_number": 6,
+                    "docstring": null,
+                    "source_code": "class ScannerService:\n\n    LANGUAGE_MAP = {\n        \".py\": \"Python\",\n        \".js\": \"JavaScript\",\n        \".ts\": \"TypeScript\",\n        \".jsx\": \"React\",\n        \".tsx\": \"React TypeScript\",\n        \".java\": \"Java\",\n        \".cpp\": \"C++\",\n        \".c\": \"C\",\n        \".cs\": \"C#\",\n        \".go\": \"Go\",\n        \".rs\": \"Rust\",\n        \".html\": \"HTML\",\n        \".css\": \"CSS\",\n        \".json\": \"JSON\",\n        \".md\": \"Markdown\",\n        \".yml\": \"YAML\",\n        \".yaml\": \"YAML\",\n        \".toml\": \"TOML\",\n    }\n\n    IGNORE_DIRS = {\n        \".git\",\n        \"__pycache__\",\n        \"node_modules\",\n        \"venv\",\n        \".idea\",\n        \".vscode\",\n        \"dist\",\n        \"build\",\n    }\n\n    @classmethod\n    def scan_repository(cls, repository_path: str):\n\n        repository = Path(repository_path)\n\n        files = []\n\n        for file in repository.rglob(\"*\"):\n\n            if not file.is_file():\n                continue\n\n            if any(part in cls.IGNORE_DIRS for part in file.parts):\n                continue\n\n            extension = file.suffix.lower()\n\n            language = cls.LANGUAGE_MAP.get(extension, \"Unknown\")\n\n            relative_path = file.relative_to(repository)\n\n            metadata = FileMetadata(\n                name=file.name,\n                path=str(relative_path),\n                extension=extension,\n                size=file.stat().st_size,\n                language=language,\n            )\n\n            files.append(metadata)\n\n        return files",
+                    "methods": [
+                        {
+                            "name": "scan_repository",
+                            "line_number": 41,
+                            "docstring": null,
+                            "source_code": "class ScannerService:\n\n    LANGUAGE_MAP = {\n        \".py\": \"Python\",\n        \".js\": \"JavaScript\",\n        \".ts\": \"TypeScript\",\n        \".jsx\": \"React\",\n        \".tsx\": \"React TypeScript\",\n        \".java\": \"Java\",\n        \".cpp\": \"C++\",\n        \".c\": \"C\",\n        \".cs\": \"C#\",\n        \".go\": \"Go\",\n        \".rs\": \"Rust\",\n        \".html\": \"HTML\",\n        \".css\": \"CSS\",\n        \".json\": \"JSON\",\n        \".md\": \"Markdown\",\n        \".yml\": \"YAML\",\n        \".yaml\": \"YAML\",\n        \".toml\": \"TOML\",\n    }\n\n    IGNORE_DIRS = {\n        \".git\",\n        \"__pycache__\",\n        \"node_modules\",\n        \"venv\",\n        \".idea\",\n        \".vscode\",\n        \"dist\",\n        \"build\",\n    }\n\n    @classmethod\n    def scan_repository(cls, repository_path: str):\n\n        repository = Path(repository_path)\n\n        files = []\n\n        for file in repository.rglob(\"*\"):\n\n            if not file.is_file():\n                continue\n\n            if any(part in cls.IGNORE_DIRS for part in file.parts):\n                continue\n\n            extension = file.suffix.lower()\n\n            language = cls.LANGUAGE_MAP.get(extension, \"Unknown\")\n\n            relative_path = file.relative_to(repository)\n\n            metadata = FileMetadata(\n                name=file.name,\n                path=str(relative_path),\n                extension=extension,\n                size=file.stat().st_size,\n                language=language,\n            )\n\n            files.append(metadata)\n\n        return files"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\services\\session_manager.py",
+            "imports": [
+                {
+                    "module": "app.schemas.chat"
+                },
+                {
+                    "module": "uuid"
+                }
+            ],
+            "functions": [],
+            "classes": [
+                {
+                    "name": "SessionManager",
+                    "line_number": 4,
+                    "docstring": null,
+                    "source_code": "class SessionManager:\n\n    def __init__(self):\n        self.sessions: dict[str, list[ChatMessage]] = {}\n\n    def create_session(self) -> str:\n        session_id = str(uuid.uuid4())\n        self.sessions[session_id]=[]\n        return session_id\n\n    def get_history(self, session_id: str) -> list[ChatMessage]:\n        return self.sessions.get(session_id,[])\n\n    def add_message(self, session_id: str, message: ChatMessage):\n\n        if session_id not in self.sessions:\n            self.sessions[session_id] = []\n\n        self.sessions[session_id].append(message)\n\n    def clear_session(self, session_id: str):\n        self.sessions.pop(session_id,None)",
+                    "methods": [
+                        {
+                            "name": "__init__",
+                            "line_number": 6,
+                            "docstring": null,
+                            "source_code": "class SessionManager:\n\n    def __init__(self):\n        self.sessions: dict[str, list[ChatMessage]] = {}\n\n    def create_session(self) -> str:\n        session_id = str(uuid.uuid4())\n        self.sessions[session_id]=[]\n        return session_id\n\n    def get_history(self, session_id: str) -> list[ChatMessage]:\n        return self.sessions.get(session_id,[])\n\n    def add_message(self, session_id: str, message: ChatMessage):\n\n        if session_id not in self.sessions:\n            self.sessions[session_id] = []\n\n        self.sessions[session_id].append(message)\n\n    def clear_session(self, session_id: str):\n        self.sessions.pop(session_id,None)"
+                        },
+                        {
+                            "name": "create_session",
+                            "line_number": 9,
+                            "docstring": null,
+                            "source_code": "class SessionManager:\n\n    def __init__(self):\n        self.sessions: dict[str, list[ChatMessage]] = {}\n\n    def create_session(self) -> str:\n        session_id = str(uuid.uuid4())\n        self.sessions[session_id]=[]\n        return session_id\n\n    def get_history(self, session_id: str) -> list[ChatMessage]:\n        return self.sessions.get(session_id,[])\n\n    def add_message(self, session_id: str, message: ChatMessage):\n\n        if session_id not in self.sessions:\n            self.sessions[session_id] = []\n\n        self.sessions[session_id].append(message)\n\n    def clear_session(self, session_id: str):\n        self.sessions.pop(session_id,None)"
+                        },
+                        {
+                            "name": "get_history",
+                            "line_number": 14,
+                            "docstring": null,
+                            "source_code": "class SessionManager:\n\n    def __init__(self):\n        self.sessions: dict[str, list[ChatMessage]] = {}\n\n    def create_session(self) -> str:\n        session_id = str(uuid.uuid4())\n        self.sessions[session_id]=[]\n        return session_id\n\n    def get_history(self, session_id: str) -> list[ChatMessage]:\n        return self.sessions.get(session_id,[])\n\n    def add_message(self, session_id: str, message: ChatMessage):\n\n        if session_id not in self.sessions:\n            self.sessions[session_id] = []\n\n        self.sessions[session_id].append(message)\n\n    def clear_session(self, session_id: str):\n        self.sessions.pop(session_id,None)"
+                        },
+                        {
+                            "name": "add_message",
+                            "line_number": 17,
+                            "docstring": null,
+                            "source_code": "class SessionManager:\n\n    def __init__(self):\n        self.sessions: dict[str, list[ChatMessage]] = {}\n\n    def create_session(self) -> str:\n        session_id = str(uuid.uuid4())\n        self.sessions[session_id]=[]\n        return session_id\n\n    def get_history(self, session_id: str) -> list[ChatMessage]:\n        return self.sessions.get(session_id,[])\n\n    def add_message(self, session_id: str, message: ChatMessage):\n\n        if session_id not in self.sessions:\n            self.sessions[session_id] = []\n\n        self.sessions[session_id].append(message)\n\n    def clear_session(self, session_id: str):\n        self.sessions.pop(session_id,None)"
+                        },
+                        {
+                            "name": "clear_session",
+                            "line_number": 24,
+                            "docstring": null,
+                            "source_code": "class SessionManager:\n\n    def __init__(self):\n        self.sessions: dict[str, list[ChatMessage]] = {}\n\n    def create_session(self) -> str:\n        session_id = str(uuid.uuid4())\n        self.sessions[session_id]=[]\n        return session_id\n\n    def get_history(self, session_id: str) -> list[ChatMessage]:\n        return self.sessions.get(session_id,[])\n\n    def add_message(self, session_id: str, message: ChatMessage):\n\n        if session_id not in self.sessions:\n            self.sessions[session_id] = []\n\n        self.sessions[session_id].append(message)\n\n    def clear_session(self, session_id: str):\n        self.sessions.pop(session_id,None)"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\services\\summary_service.py",
+            "imports": [
+                {
+                    "module": "collections"
+                },
+                {
+                    "module": "pathlib"
+                },
+                {
+                    "module": "app.schemas.summary"
+                },
+                {
+                    "module": "app.services.scanner_service"
+                }
+            ],
+            "functions": [],
+            "classes": [
+                {
+                    "name": "SummaryService",
+                    "line_number": 8,
+                    "docstring": null,
+                    "source_code": "class SummaryService:\n\n    @classmethod\n    def generate_summary(cls, repository_path: str):\n\n        repository = Path(repository_path)\n\n        files = ScannerService.scan_repository(repository_path)\n\n        total_files = len(files)\n\n        total_directories = sum(\n            1\n            for path in repository.rglob(\"*\")\n            if path.is_dir()\n            and path.name not in ScannerService.IGNORE_DIRS\n        )\n\n        total_size = sum(file.size for file in files)\n\n        language_counter = Counter(file.language for file in files)\n\n        largest = max(files, key=lambda file: file.size)\n\n        return RepositorySummary(\n            repository=repository.name,\n            total_files=total_files,\n            total_directories=total_directories,\n            total_size=total_size,\n            languages=dict(language_counter),\n            largest_file=LargestFile(\n                name=largest.name,\n                size=largest.size,\n            ),\n        )",
+                    "methods": [
+                        {
+                            "name": "generate_summary",
+                            "line_number": 11,
+                            "docstring": null,
+                            "source_code": "class SummaryService:\n\n    @classmethod\n    def generate_summary(cls, repository_path: str):\n\n        repository = Path(repository_path)\n\n        files = ScannerService.scan_repository(repository_path)\n\n        total_files = len(files)\n\n        total_directories = sum(\n            1\n            for path in repository.rglob(\"*\")\n            if path.is_dir()\n            and path.name not in ScannerService.IGNORE_DIRS\n        )\n\n        total_size = sum(file.size for file in files)\n\n        language_counter = Counter(file.language for file in files)\n\n        largest = max(files, key=lambda file: file.size)\n\n        return RepositorySummary(\n            repository=repository.name,\n            total_files=total_files,\n            total_directories=total_directories,\n            total_size=total_size,\n            languages=dict(language_counter),\n            largest_file=LargestFile(\n                name=largest.name,\n                size=largest.size,\n            ),\n        )"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\services\\tree_service.py",
+            "imports": [
+                {
+                    "module": "pathlib"
+                },
+                {
+                    "module": "app.schemas.tree"
+                }
+            ],
+            "functions": [],
+            "classes": [
+                {
+                    "name": "TreeService",
+                    "line_number": 6,
+                    "docstring": null,
+                    "source_code": "class TreeService:\n\n    @classmethod\n    def build_tree(cls, repository_path: str):\n\n        repository = Path(repository_path)\n\n        return cls._build_node(repository, repository)\n\n    @classmethod\n    def _build_node(cls, current_path: Path, root_path: Path):\n\n        node = TreeNode(\n            name=current_path.name,\n            path=str(current_path.relative_to(root_path)) if current_path != root_path else \"\",\n            is_directory=current_path.is_dir(),\n        )\n\n        if current_path.is_dir():\n\n            children = sorted(\n                current_path.iterdir(),\n                key=lambda x: (x.is_file(), x.name.lower())\n            )\n\n            for child in children:\n\n                if child.name in {\n                    \".git\",\n                    \"__pycache__\",\n                    \"node_modules\",\n                    \"venv\",\n                    \".idea\",\n                    \".vscode\",\n                    \"dist\",\n                    \"build\",\n                }:\n                    continue\n\n                node.children.append(\n                    cls._build_node(child, root_path)\n                )\n\n        return node",
+                    "methods": [
+                        {
+                            "name": "build_tree",
+                            "line_number": 9,
+                            "docstring": null,
+                            "source_code": "class TreeService:\n\n    @classmethod\n    def build_tree(cls, repository_path: str):\n\n        repository = Path(repository_path)\n\n        return cls._build_node(repository, repository)\n\n    @classmethod\n    def _build_node(cls, current_path: Path, root_path: Path):\n\n        node = TreeNode(\n            name=current_path.name,\n            path=str(current_path.relative_to(root_path)) if current_path != root_path else \"\",\n            is_directory=current_path.is_dir(),\n        )\n\n        if current_path.is_dir():\n\n            children = sorted(\n                current_path.iterdir(),\n                key=lambda x: (x.is_file(), x.name.lower())\n            )\n\n            for child in children:\n\n                if child.name in {\n                    \".git\",\n                    \"__pycache__\",\n                    \"node_modules\",\n                    \"venv\",\n                    \".idea\",\n                    \".vscode\",\n                    \"dist\",\n                    \"build\",\n                }:\n                    continue\n\n                node.children.append(\n                    cls._build_node(child, root_path)\n                )\n\n        return node"
+                        },
+                        {
+                            "name": "_build_node",
+                            "line_number": 16,
+                            "docstring": null,
+                            "source_code": "class TreeService:\n\n    @classmethod\n    def build_tree(cls, repository_path: str):\n\n        repository = Path(repository_path)\n\n        return cls._build_node(repository, repository)\n\n    @classmethod\n    def _build_node(cls, current_path: Path, root_path: Path):\n\n        node = TreeNode(\n            name=current_path.name,\n            path=str(current_path.relative_to(root_path)) if current_path != root_path else \"\",\n            is_directory=current_path.is_dir(),\n        )\n\n        if current_path.is_dir():\n\n            children = sorted(\n                current_path.iterdir(),\n                key=lambda x: (x.is_file(), x.name.lower())\n            )\n\n            for child in children:\n\n                if child.name in {\n                    \".git\",\n                    \"__pycache__\",\n                    \"node_modules\",\n                    \"venv\",\n                    \".idea\",\n                    \".vscode\",\n                    \"dist\",\n                    \"build\",\n                }:\n                    continue\n\n                node.children.append(\n                    cls._build_node(child, root_path)\n                )\n\n        return node"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\services\\vector_store_service.py",
+            "imports": [
+                {
+                    "module": "faiss"
+                },
+                {
+                    "module": "numpy"
+                },
+                {
+                    "module": "os"
+                }
+            ],
+            "functions": [],
+            "classes": [
+                {
+                    "name": "VectorStoreService",
+                    "line_number": 5,
+                    "docstring": null,
+                    "source_code": "class VectorStoreService:\n\n    def __init__(self):\n\n        self.index = None\n\n    def create_index(self, dimension:int) -> None:\n        # Create an faiss index for storing embedding vectors\n        self.index = faiss.IndexFlatIP(dimension)\n\n    def add_embeddings(self, embeddings: list[list[float]]) -> None:\n        # Add embeddings to faiss index\n        if self.index is None:\n            raise ValueError(\"FAISS index has not been created\")\n\n        embeddings = np.array(embeddings,dtype=np.float32)\n\n        self.index.add(embeddings)\n\n    def search(\n        self,\n        query_embedding: list[float],\n        top_k: int = 5,\n    ) -> tuple[np.ndarray, np.ndarray]:\n        #Search for the most similar embeddings in the FAISS index.\n\n        if self.index is None:\n            raise ValueError(\"FAISS index has not been created.\")\n\n        query_embedding = np.array(\n            [query_embedding],\n            dtype=np.float32,\n        )\n\n        scores, indices = self.index.search(\n            query_embedding,\n            top_k,\n        )\n\n        return scores, indices\n\n    def save(self, file_path: str) -> None:\n        #Save the FAISS index to disk.\n\n        if self.index is None:\n            raise ValueError(\"No FAISS index to save.\")\n\n        faiss.write_index(self.index, file_path)\n\n    def load(self, file_path: str) -> None:\n        #Load a FAISS index from disk.\n\n\n        self.index = faiss.read_index(file_path)",
+                    "methods": [
+                        {
+                            "name": "__init__",
+                            "line_number": 7,
+                            "docstring": null,
+                            "source_code": "class VectorStoreService:\n\n    def __init__(self):\n\n        self.index = None\n\n    def create_index(self, dimension:int) -> None:\n        # Create an faiss index for storing embedding vectors\n        self.index = faiss.IndexFlatIP(dimension)\n\n    def add_embeddings(self, embeddings: list[list[float]]) -> None:\n        # Add embeddings to faiss index\n        if self.index is None:\n            raise ValueError(\"FAISS index has not been created\")\n\n        embeddings = np.array(embeddings,dtype=np.float32)\n\n        self.index.add(embeddings)\n\n    def search(\n        self,\n        query_embedding: list[float],\n        top_k: int = 5,\n    ) -> tuple[np.ndarray, np.ndarray]:\n        #Search for the most similar embeddings in the FAISS index.\n\n        if self.index is None:\n            raise ValueError(\"FAISS index has not been created.\")\n\n        query_embedding = np.array(\n            [query_embedding],\n            dtype=np.float32,\n        )\n\n        scores, indices = self.index.search(\n            query_embedding,\n            top_k,\n        )\n\n        return scores, indices\n\n    def save(self, file_path: str) -> None:\n        #Save the FAISS index to disk.\n\n        if self.index is None:\n            raise ValueError(\"No FAISS index to save.\")\n\n        faiss.write_index(self.index, file_path)\n\n    def load(self, file_path: str) -> None:\n        #Load a FAISS index from disk.\n\n\n        self.index = faiss.read_index(file_path)"
+                        },
+                        {
+                            "name": "create_index",
+                            "line_number": 11,
+                            "docstring": null,
+                            "source_code": "class VectorStoreService:\n\n    def __init__(self):\n\n        self.index = None\n\n    def create_index(self, dimension:int) -> None:\n        # Create an faiss index for storing embedding vectors\n        self.index = faiss.IndexFlatIP(dimension)\n\n    def add_embeddings(self, embeddings: list[list[float]]) -> None:\n        # Add embeddings to faiss index\n        if self.index is None:\n            raise ValueError(\"FAISS index has not been created\")\n\n        embeddings = np.array(embeddings,dtype=np.float32)\n\n        self.index.add(embeddings)\n\n    def search(\n        self,\n        query_embedding: list[float],\n        top_k: int = 5,\n    ) -> tuple[np.ndarray, np.ndarray]:\n        #Search for the most similar embeddings in the FAISS index.\n\n        if self.index is None:\n            raise ValueError(\"FAISS index has not been created.\")\n\n        query_embedding = np.array(\n            [query_embedding],\n            dtype=np.float32,\n        )\n\n        scores, indices = self.index.search(\n            query_embedding,\n            top_k,\n        )\n\n        return scores, indices\n\n    def save(self, file_path: str) -> None:\n        #Save the FAISS index to disk.\n\n        if self.index is None:\n            raise ValueError(\"No FAISS index to save.\")\n\n        faiss.write_index(self.index, file_path)\n\n    def load(self, file_path: str) -> None:\n        #Load a FAISS index from disk.\n\n\n        self.index = faiss.read_index(file_path)"
+                        },
+                        {
+                            "name": "add_embeddings",
+                            "line_number": 15,
+                            "docstring": null,
+                            "source_code": "class VectorStoreService:\n\n    def __init__(self):\n\n        self.index = None\n\n    def create_index(self, dimension:int) -> None:\n        # Create an faiss index for storing embedding vectors\n        self.index = faiss.IndexFlatIP(dimension)\n\n    def add_embeddings(self, embeddings: list[list[float]]) -> None:\n        # Add embeddings to faiss index\n        if self.index is None:\n            raise ValueError(\"FAISS index has not been created\")\n\n        embeddings = np.array(embeddings,dtype=np.float32)\n\n        self.index.add(embeddings)\n\n    def search(\n        self,\n        query_embedding: list[float],\n        top_k: int = 5,\n    ) -> tuple[np.ndarray, np.ndarray]:\n        #Search for the most similar embeddings in the FAISS index.\n\n        if self.index is None:\n            raise ValueError(\"FAISS index has not been created.\")\n\n        query_embedding = np.array(\n            [query_embedding],\n            dtype=np.float32,\n        )\n\n        scores, indices = self.index.search(\n            query_embedding,\n            top_k,\n        )\n\n        return scores, indices\n\n    def save(self, file_path: str) -> None:\n        #Save the FAISS index to disk.\n\n        if self.index is None:\n            raise ValueError(\"No FAISS index to save.\")\n\n        faiss.write_index(self.index, file_path)\n\n    def load(self, file_path: str) -> None:\n        #Load a FAISS index from disk.\n\n\n        self.index = faiss.read_index(file_path)"
+                        },
+                        {
+                            "name": "search",
+                            "line_number": 24,
+                            "docstring": null,
+                            "source_code": "class VectorStoreService:\n\n    def __init__(self):\n\n        self.index = None\n\n    def create_index(self, dimension:int) -> None:\n        # Create an faiss index for storing embedding vectors\n        self.index = faiss.IndexFlatIP(dimension)\n\n    def add_embeddings(self, embeddings: list[list[float]]) -> None:\n        # Add embeddings to faiss index\n        if self.index is None:\n            raise ValueError(\"FAISS index has not been created\")\n\n        embeddings = np.array(embeddings,dtype=np.float32)\n\n        self.index.add(embeddings)\n\n    def search(\n        self,\n        query_embedding: list[float],\n        top_k: int = 5,\n    ) -> tuple[np.ndarray, np.ndarray]:\n        #Search for the most similar embeddings in the FAISS index.\n\n        if self.index is None:\n            raise ValueError(\"FAISS index has not been created.\")\n\n        query_embedding = np.array(\n            [query_embedding],\n            dtype=np.float32,\n        )\n\n        scores, indices = self.index.search(\n            query_embedding,\n            top_k,\n        )\n\n        return scores, indices\n\n    def save(self, file_path: str) -> None:\n        #Save the FAISS index to disk.\n\n        if self.index is None:\n            raise ValueError(\"No FAISS index to save.\")\n\n        faiss.write_index(self.index, file_path)\n\n    def load(self, file_path: str) -> None:\n        #Load a FAISS index from disk.\n\n\n        self.index = faiss.read_index(file_path)"
+                        },
+                        {
+                            "name": "save",
+                            "line_number": 46,
+                            "docstring": null,
+                            "source_code": "class VectorStoreService:\n\n    def __init__(self):\n\n        self.index = None\n\n    def create_index(self, dimension:int) -> None:\n        # Create an faiss index for storing embedding vectors\n        self.index = faiss.IndexFlatIP(dimension)\n\n    def add_embeddings(self, embeddings: list[list[float]]) -> None:\n        # Add embeddings to faiss index\n        if self.index is None:\n            raise ValueError(\"FAISS index has not been created\")\n\n        embeddings = np.array(embeddings,dtype=np.float32)\n\n        self.index.add(embeddings)\n\n    def search(\n        self,\n        query_embedding: list[float],\n        top_k: int = 5,\n    ) -> tuple[np.ndarray, np.ndarray]:\n        #Search for the most similar embeddings in the FAISS index.\n\n        if self.index is None:\n            raise ValueError(\"FAISS index has not been created.\")\n\n        query_embedding = np.array(\n            [query_embedding],\n            dtype=np.float32,\n        )\n\n        scores, indices = self.index.search(\n            query_embedding,\n            top_k,\n        )\n\n        return scores, indices\n\n    def save(self, file_path: str) -> None:\n        #Save the FAISS index to disk.\n\n        if self.index is None:\n            raise ValueError(\"No FAISS index to save.\")\n\n        faiss.write_index(self.index, file_path)\n\n    def load(self, file_path: str) -> None:\n        #Load a FAISS index from disk.\n\n\n        self.index = faiss.read_index(file_path)"
+                        },
+                        {
+                            "name": "load",
+                            "line_number": 54,
+                            "docstring": null,
+                            "source_code": "class VectorStoreService:\n\n    def __init__(self):\n\n        self.index = None\n\n    def create_index(self, dimension:int) -> None:\n        # Create an faiss index for storing embedding vectors\n        self.index = faiss.IndexFlatIP(dimension)\n\n    def add_embeddings(self, embeddings: list[list[float]]) -> None:\n        # Add embeddings to faiss index\n        if self.index is None:\n            raise ValueError(\"FAISS index has not been created\")\n\n        embeddings = np.array(embeddings,dtype=np.float32)\n\n        self.index.add(embeddings)\n\n    def search(\n        self,\n        query_embedding: list[float],\n        top_k: int = 5,\n    ) -> tuple[np.ndarray, np.ndarray]:\n        #Search for the most similar embeddings in the FAISS index.\n\n        if self.index is None:\n            raise ValueError(\"FAISS index has not been created.\")\n\n        query_embedding = np.array(\n            [query_embedding],\n            dtype=np.float32,\n        )\n\n        scores, indices = self.index.search(\n            query_embedding,\n            top_k,\n        )\n\n        return scores, indices\n\n    def save(self, file_path: str) -> None:\n        #Save the FAISS index to disk.\n\n        if self.index is None:\n            raise ValueError(\"No FAISS index to save.\")\n\n        faiss.write_index(self.index, file_path)\n\n    def load(self, file_path: str) -> None:\n        #Load a FAISS index from disk.\n\n\n        self.index = faiss.read_index(file_path)"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\services\\__init__.py",
+            "imports": [],
+            "functions": [],
+            "classes": []
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\services\\llm\\gemini_provider.py",
+            "imports": [
+                {
+                    "module": "os"
+                },
+                {
+                    "module": "app.core.config"
+                },
+                {
+                    "module": "google"
+                }
+            ],
+            "functions": [],
+            "classes": [
+                {
+                    "name": "GeminiProvider",
+                    "line_number": 5,
+                    "docstring": null,
+                    "source_code": "class GeminiProvider:\n\n    def __init__(self):\n\n        self.api_key = settings.GEMINI_API_KEY\n        \n        if not self.api_key:\n            raise ValueError(\"Gemini API key not found. Please check your .env file\")\n\n        self.client = genai.Client(api_key=self.api_key)\n\n    def generate_response(self, prompt:str) -> str:\n\n        response = self.client.models.generate_content(\n            model=\"gemini-3.5-flash-lite\",\n            contents=prompt\n        )\n\n        return response.text",
+                    "methods": [
+                        {
+                            "name": "__init__",
+                            "line_number": 7,
+                            "docstring": null,
+                            "source_code": "class GeminiProvider:\n\n    def __init__(self):\n\n        self.api_key = settings.GEMINI_API_KEY\n        \n        if not self.api_key:\n            raise ValueError(\"Gemini API key not found. Please check your .env file\")\n\n        self.client = genai.Client(api_key=self.api_key)\n\n    def generate_response(self, prompt:str) -> str:\n\n        response = self.client.models.generate_content(\n            model=\"gemini-3.5-flash-lite\",\n            contents=prompt\n        )\n\n        return response.text"
+                        },
+                        {
+                            "name": "generate_response",
+                            "line_number": 16,
+                            "docstring": null,
+                            "source_code": "class GeminiProvider:\n\n    def __init__(self):\n\n        self.api_key = settings.GEMINI_API_KEY\n        \n        if not self.api_key:\n            raise ValueError(\"Gemini API key not found. Please check your .env file\")\n\n        self.client = genai.Client(api_key=self.api_key)\n\n    def generate_response(self, prompt:str) -> str:\n\n        response = self.client.models.generate_content(\n            model=\"gemini-3.5-flash-lite\",\n            contents=prompt\n        )\n\n        return response.text"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\services\\llm\\llm_service.py",
+            "imports": [
+                {
+                    "module": "app.services.llm.gemini_provider"
+                },
+                {
+                    "module": "app.services.llm.prompt_builder"
+                },
+                {
+                    "module": "app.schemas.chat"
+                }
+            ],
+            "functions": [],
+            "classes": [
+                {
+                    "name": "LLMService",
+                    "line_number": 5,
+                    "docstring": null,
+                    "source_code": "class LLMService:\n    def __init__(self):\n        self.provider = GeminiProvider()\n\n    def answer_question(self, question:str, retrieved_chunks:str) -> str:\n\n        prompt = PromptBuilder.build_qa_prompt(\n            question,\n            retrieved_chunks\n        )\n\n        response = self.provider.generate_response(prompt)\n\n        return response\n\n    def answer_chat(self, question:str, history:list[ChatMessage], retrieved_chunks:list):\n\n        prompt = PromptBuilder.build_chat_prompt(\n            question,\n            history,\n            retrieved_chunks,\n        )\n\n        response = self.provider.generate_response(prompt)\n\n        return response",
+                    "methods": [
+                        {
+                            "name": "__init__",
+                            "line_number": 6,
+                            "docstring": null,
+                            "source_code": "class LLMService:\n    def __init__(self):\n        self.provider = GeminiProvider()\n\n    def answer_question(self, question:str, retrieved_chunks:str) -> str:\n\n        prompt = PromptBuilder.build_qa_prompt(\n            question,\n            retrieved_chunks\n        )\n\n        response = self.provider.generate_response(prompt)\n\n        return response\n\n    def answer_chat(self, question:str, history:list[ChatMessage], retrieved_chunks:list):\n\n        prompt = PromptBuilder.build_chat_prompt(\n            question,\n            history,\n            retrieved_chunks,\n        )\n\n        response = self.provider.generate_response(prompt)\n\n        return response"
+                        },
+                        {
+                            "name": "answer_question",
+                            "line_number": 9,
+                            "docstring": null,
+                            "source_code": "class LLMService:\n    def __init__(self):\n        self.provider = GeminiProvider()\n\n    def answer_question(self, question:str, retrieved_chunks:str) -> str:\n\n        prompt = PromptBuilder.build_qa_prompt(\n            question,\n            retrieved_chunks\n        )\n\n        response = self.provider.generate_response(prompt)\n\n        return response\n\n    def answer_chat(self, question:str, history:list[ChatMessage], retrieved_chunks:list):\n\n        prompt = PromptBuilder.build_chat_prompt(\n            question,\n            history,\n            retrieved_chunks,\n        )\n\n        response = self.provider.generate_response(prompt)\n\n        return response"
+                        },
+                        {
+                            "name": "answer_chat",
+                            "line_number": 20,
+                            "docstring": null,
+                            "source_code": "class LLMService:\n    def __init__(self):\n        self.provider = GeminiProvider()\n\n    def answer_question(self, question:str, retrieved_chunks:str) -> str:\n\n        prompt = PromptBuilder.build_qa_prompt(\n            question,\n            retrieved_chunks\n        )\n\n        response = self.provider.generate_response(prompt)\n\n        return response\n\n    def answer_chat(self, question:str, history:list[ChatMessage], retrieved_chunks:list):\n\n        prompt = PromptBuilder.build_chat_prompt(\n            question,\n            history,\n            retrieved_chunks,\n        )\n\n        response = self.provider.generate_response(prompt)\n\n        return response"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\services\\llm\\prompt_builder.py",
+            "imports": [
+                {
+                    "module": "app.schemas.chat"
+                }
+            ],
+            "functions": [],
+            "classes": [
+                {
+                    "name": "PromptBuilder",
+                    "line_number": 3,
+                    "docstring": null,
+                    "source_code": "class PromptBuilder:\n\n    @staticmethod\n    def build_qa_prompt(question:str, retrieved_chunks:list) -> str:\n        prompt = \"\"\n\n        prompt += (\n            \"You are an expert Software Engineer specializing in code analysis.\\n\\n\"\n            \"You are given code snippets retrieved from a GitHub repository.\\n\"\n            \"Answer ONLY using the provided repository context.\\n\"\n            \"Do NOT make assumptions or hallucinate missing information.\\n\"\n            \"If the answer cannot be determined from the provided context, \"\n            \"clearly state that more repository context is required.\\n\\n\"\n        )\n\n        prompt += \"=\" * 80 + \"\\n\"\n        prompt += \"REPOSITORY CONTEXT\\n\"\n        prompt += \"=\" * 80 + \"\\n\\n\"\n\n        for i,chunk in enumerate(retrieved_chunks,start=1):\n            prompt += f\"chunk {i}\\n\"\n            prompt += \"-\" * 40 + \"\\n\"\n            prompt += f\"File: {chunk.get('file_path', 'Unknown')}\\n\"\n            prompt += f\"Name: {chunk.get('chunk_name', 'Unknown')}\\n\"\n            prompt += (\n                f\"Lines: {chunk.get('start_line', '?')} - \"\n                f\"{chunk.get('end_line', '?')}\\n\\n\"\n            )\n            prompt += \"Code:\\n\"\n            prompt += \"```python\\n\"\n            prompt += chunk.get(\"content\", \"\")\n            prompt += \"\\n```\\n\\n\" \n\n        prompt += \"=\" * 80 + \"\\n\"\n        prompt += \"USER QUESTION\\n\"\n        prompt += \"=\" * 80 + \"\\n\\n\"\n\n        prompt += f\"{question}\\n\\n\"\n\n        prompt += \"=\" * 80 + \"\\n\"\n        prompt += \"ANSWER INSTRUCTIONS\\n\"\n        prompt += \"=\" * 80 + \"\\n\\n\"\n\n        prompt += (\n            \"Provide a clear and structured explanation.\\n\"\n            \"Mention the relevant files and code chunks used.\\n\"\n            \"Do not use information outside the provided repository context.\\n\"\n        )\n\n        return prompt\n\n    @staticmethod\n    def build_chat_prompt(question:str, history:list[ChatMessage], retrieved_chunks:list) -> str:\n        prompt = \"\"\n\n        prompt += (\n            \"You are an expert Software Engineer specializing in code analysis.\\n\\n\"\n            \"You are given code snippets retrieved from a GitHub repository.\\n\"\n            \"Answer ONLY using the provided repository context.\\n\"\n            \"Do NOT make assumptions or hallucinate missing information.\\n\"\n            \"If the answer cannot be determined from the provided context, \"\n            \"clearly state that more repository context is required.\\n\\n\"\n        )\n\n        prompt += \"=\" * 80 + \"\\n\"\n        prompt += \"CONVERSATION HISTORY\\n\"\n        prompt += \"=\" * 80 + \"\\n\\n\"\n\n        for message in history:\n            prompt += f\"{message.role.value.capitalize()}:\\n\"\n            prompt += f\"{message.content}\\n\\n\"\n\n        prompt += \"=\" * 80 + \"\\n\"\n        prompt += \"REPOSITORY CONTEXT\\n\"\n        prompt += \"=\" * 80 + \"\\n\\n\"\n\n        for i,chunk in enumerate(retrieved_chunks,start=1):\n            prompt += f\"chunk {i}\\n\"\n            prompt += \"-\" * 40 + \"\\n\"\n            prompt += f\"File: {chunk.get('file_path', 'Unknown')}\\n\"\n            prompt += f\"Name: {chunk.get('chunk_name', 'Unknown')}\\n\"\n            prompt += (\n                f\"Lines: {chunk.get('start_line', '?')} - \"\n                f\"{chunk.get('end_line', '?')}\\n\\n\"\n            )\n            prompt += \"Code:\\n\"\n            prompt += \"```python\\n\"\n            prompt += chunk.get(\"content\", \"\")\n            prompt += \"\\n```\\n\\n\" \n\n        prompt += \"=\" * 80 + \"\\n\"\n        prompt += \"USER QUESTION\\n\"\n        prompt += \"=\" * 80 + \"\\n\\n\"\n\n        prompt += f\"{question}\\n\\n\"\n\n        prompt += \"=\" * 80 + \"\\n\"\n        prompt += \"ANSWER INSTRUCTIONS\\n\"\n        prompt += \"=\" * 80 + \"\\n\\n\"\n\n        prompt += (\n            \"Provide a clear and structured explanation.\\n\"\n            \"Mention the relevant files and code chunks used.\\n\"\n            \"Do not use information outside the provided repository context.\\n\"\n        )\n\n        return prompt",
+                    "methods": [
+                        {
+                            "name": "build_qa_prompt",
+                            "line_number": 6,
+                            "docstring": null,
+                            "source_code": "class PromptBuilder:\n\n    @staticmethod\n    def build_qa_prompt(question:str, retrieved_chunks:list) -> str:\n        prompt = \"\"\n\n        prompt += (\n            \"You are an expert Software Engineer specializing in code analysis.\\n\\n\"\n            \"You are given code snippets retrieved from a GitHub repository.\\n\"\n            \"Answer ONLY using the provided repository context.\\n\"\n            \"Do NOT make assumptions or hallucinate missing information.\\n\"\n            \"If the answer cannot be determined from the provided context, \"\n            \"clearly state that more repository context is required.\\n\\n\"\n        )\n\n        prompt += \"=\" * 80 + \"\\n\"\n        prompt += \"REPOSITORY CONTEXT\\n\"\n        prompt += \"=\" * 80 + \"\\n\\n\"\n\n        for i,chunk in enumerate(retrieved_chunks,start=1):\n            prompt += f\"chunk {i}\\n\"\n            prompt += \"-\" * 40 + \"\\n\"\n            prompt += f\"File: {chunk.get('file_path', 'Unknown')}\\n\"\n            prompt += f\"Name: {chunk.get('chunk_name', 'Unknown')}\\n\"\n            prompt += (\n                f\"Lines: {chunk.get('start_line', '?')} - \"\n                f\"{chunk.get('end_line', '?')}\\n\\n\"\n            )\n            prompt += \"Code:\\n\"\n            prompt += \"```python\\n\"\n            prompt += chunk.get(\"content\", \"\")\n            prompt += \"\\n```\\n\\n\" \n\n        prompt += \"=\" * 80 + \"\\n\"\n        prompt += \"USER QUESTION\\n\"\n        prompt += \"=\" * 80 + \"\\n\\n\"\n\n        prompt += f\"{question}\\n\\n\"\n\n        prompt += \"=\" * 80 + \"\\n\"\n        prompt += \"ANSWER INSTRUCTIONS\\n\"\n        prompt += \"=\" * 80 + \"\\n\\n\"\n\n        prompt += (\n            \"Provide a clear and structured explanation.\\n\"\n            \"Mention the relevant files and code chunks used.\\n\"\n            \"Do not use information outside the provided repository context.\\n\"\n        )\n\n        return prompt\n\n    @staticmethod\n    def build_chat_prompt(question:str, history:list[ChatMessage], retrieved_chunks:list) -> str:\n        prompt = \"\"\n\n        prompt += (\n            \"You are an expert Software Engineer specializing in code analysis.\\n\\n\"\n            \"You are given code snippets retrieved from a GitHub repository.\\n\"\n            \"Answer ONLY using the provided repository context.\\n\"\n            \"Do NOT make assumptions or hallucinate missing information.\\n\"\n            \"If the answer cannot be determined from the provided context, \"\n            \"clearly state that more repository context is required.\\n\\n\"\n        )\n\n        prompt += \"=\" * 80 + \"\\n\"\n        prompt += \"CONVERSATION HISTORY\\n\"\n        prompt += \"=\" * 80 + \"\\n\\n\"\n\n        for message in history:\n            prompt += f\"{message.role.value.capitalize()}:\\n\"\n            prompt += f\"{message.content}\\n\\n\"\n\n        prompt += \"=\" * 80 + \"\\n\"\n        prompt += \"REPOSITORY CONTEXT\\n\"\n        prompt += \"=\" * 80 + \"\\n\\n\"\n\n        for i,chunk in enumerate(retrieved_chunks,start=1):\n            prompt += f\"chunk {i}\\n\"\n            prompt += \"-\" * 40 + \"\\n\"\n            prompt += f\"File: {chunk.get('file_path', 'Unknown')}\\n\"\n            prompt += f\"Name: {chunk.get('chunk_name', 'Unknown')}\\n\"\n            prompt += (\n                f\"Lines: {chunk.get('start_line', '?')} - \"\n                f\"{chunk.get('end_line', '?')}\\n\\n\"\n            )\n            prompt += \"Code:\\n\"\n            prompt += \"```python\\n\"\n            prompt += chunk.get(\"content\", \"\")\n            prompt += \"\\n```\\n\\n\" \n\n        prompt += \"=\" * 80 + \"\\n\"\n        prompt += \"USER QUESTION\\n\"\n        prompt += \"=\" * 80 + \"\\n\\n\"\n\n        prompt += f\"{question}\\n\\n\"\n\n        prompt += \"=\" * 80 + \"\\n\"\n        prompt += \"ANSWER INSTRUCTIONS\\n\"\n        prompt += \"=\" * 80 + \"\\n\\n\"\n\n        prompt += (\n            \"Provide a clear and structured explanation.\\n\"\n            \"Mention the relevant files and code chunks used.\\n\"\n            \"Do not use information outside the provided repository context.\\n\"\n        )\n\n        return prompt"
+                        },
+                        {
+                            "name": "build_chat_prompt",
+                            "line_number": 55,
+                            "docstring": null,
+                            "source_code": "class PromptBuilder:\n\n    @staticmethod\n    def build_qa_prompt(question:str, retrieved_chunks:list) -> str:\n        prompt = \"\"\n\n        prompt += (\n            \"You are an expert Software Engineer specializing in code analysis.\\n\\n\"\n            \"You are given code snippets retrieved from a GitHub repository.\\n\"\n            \"Answer ONLY using the provided repository context.\\n\"\n            \"Do NOT make assumptions or hallucinate missing information.\\n\"\n            \"If the answer cannot be determined from the provided context, \"\n            \"clearly state that more repository context is required.\\n\\n\"\n        )\n\n        prompt += \"=\" * 80 + \"\\n\"\n        prompt += \"REPOSITORY CONTEXT\\n\"\n        prompt += \"=\" * 80 + \"\\n\\n\"\n\n        for i,chunk in enumerate(retrieved_chunks,start=1):\n            prompt += f\"chunk {i}\\n\"\n            prompt += \"-\" * 40 + \"\\n\"\n            prompt += f\"File: {chunk.get('file_path', 'Unknown')}\\n\"\n            prompt += f\"Name: {chunk.get('chunk_name', 'Unknown')}\\n\"\n            prompt += (\n                f\"Lines: {chunk.get('start_line', '?')} - \"\n                f\"{chunk.get('end_line', '?')}\\n\\n\"\n            )\n            prompt += \"Code:\\n\"\n            prompt += \"```python\\n\"\n            prompt += chunk.get(\"content\", \"\")\n            prompt += \"\\n```\\n\\n\" \n\n        prompt += \"=\" * 80 + \"\\n\"\n        prompt += \"USER QUESTION\\n\"\n        prompt += \"=\" * 80 + \"\\n\\n\"\n\n        prompt += f\"{question}\\n\\n\"\n\n        prompt += \"=\" * 80 + \"\\n\"\n        prompt += \"ANSWER INSTRUCTIONS\\n\"\n        prompt += \"=\" * 80 + \"\\n\\n\"\n\n        prompt += (\n            \"Provide a clear and structured explanation.\\n\"\n            \"Mention the relevant files and code chunks used.\\n\"\n            \"Do not use information outside the provided repository context.\\n\"\n        )\n\n        return prompt\n\n    @staticmethod\n    def build_chat_prompt(question:str, history:list[ChatMessage], retrieved_chunks:list) -> str:\n        prompt = \"\"\n\n        prompt += (\n            \"You are an expert Software Engineer specializing in code analysis.\\n\\n\"\n            \"You are given code snippets retrieved from a GitHub repository.\\n\"\n            \"Answer ONLY using the provided repository context.\\n\"\n            \"Do NOT make assumptions or hallucinate missing information.\\n\"\n            \"If the answer cannot be determined from the provided context, \"\n            \"clearly state that more repository context is required.\\n\\n\"\n        )\n\n        prompt += \"=\" * 80 + \"\\n\"\n        prompt += \"CONVERSATION HISTORY\\n\"\n        prompt += \"=\" * 80 + \"\\n\\n\"\n\n        for message in history:\n            prompt += f\"{message.role.value.capitalize()}:\\n\"\n            prompt += f\"{message.content}\\n\\n\"\n\n        prompt += \"=\" * 80 + \"\\n\"\n        prompt += \"REPOSITORY CONTEXT\\n\"\n        prompt += \"=\" * 80 + \"\\n\\n\"\n\n        for i,chunk in enumerate(retrieved_chunks,start=1):\n            prompt += f\"chunk {i}\\n\"\n            prompt += \"-\" * 40 + \"\\n\"\n            prompt += f\"File: {chunk.get('file_path', 'Unknown')}\\n\"\n            prompt += f\"Name: {chunk.get('chunk_name', 'Unknown')}\\n\"\n            prompt += (\n                f\"Lines: {chunk.get('start_line', '?')} - \"\n                f\"{chunk.get('end_line', '?')}\\n\\n\"\n            )\n            prompt += \"Code:\\n\"\n            prompt += \"```python\\n\"\n            prompt += chunk.get(\"content\", \"\")\n            prompt += \"\\n```\\n\\n\" \n\n        prompt += \"=\" * 80 + \"\\n\"\n        prompt += \"USER QUESTION\\n\"\n        prompt += \"=\" * 80 + \"\\n\\n\"\n\n        prompt += f\"{question}\\n\\n\"\n\n        prompt += \"=\" * 80 + \"\\n\"\n        prompt += \"ANSWER INSTRUCTIONS\\n\"\n        prompt += \"=\" * 80 + \"\\n\\n\"\n\n        prompt += (\n            \"Provide a clear and structured explanation.\\n\"\n            \"Mention the relevant files and code chunks used.\\n\"\n            \"Do not use information outside the provided repository context.\\n\"\n        )\n\n        return prompt"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\services\\llm\\__init__.py",
+            "imports": [],
+            "functions": [],
+            "classes": []
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\utils\\repository.py",
+            "imports": [
+                {
+                    "module": "pathlib"
+                },
+                {
+                    "module": "fastapi"
+                },
+                {
+                    "module": "app.core.config"
+                }
+            ],
+            "functions": [
+                {
+                    "name": "get_repository_path",
+                    "line_number": 8,
+                    "docstring": "Returns repository path if it exists.\nRaises 404 otherwise.",
+                    "source_code": "def get_repository_path(repository_name: str) -> Path:\n    \"\"\"\n    Returns repository path if it exists.\n    Raises 404 otherwise.\n    \"\"\"\n\n    repository_path = Path(settings.UPLOAD_DIR) / repository_name\n\n    if not repository_path.exists():\n        raise HTTPException(\n            status_code=404,\n            detail=\"Repository not found.\"\n        )\n\n    return repository_path"
+                }
+            ],
+            "classes": []
+        },
+        {
+            "file_path": "uploads\\codemind-ai.git\\backend\\app\\utils\\__init__.py",
+            "imports": [],
+            "functions": [],
+            "classes": []
+        }
+    ]
+}

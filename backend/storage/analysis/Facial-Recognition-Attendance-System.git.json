@@ -1,0 +1,52 @@
+{
+    "repository_name": "Facial-Recognition-Attendance-System.git",
+    "files": [
+        {
+            "file_path": "uploads\\Facial-Recognition-Attendance-System.git\\Face_Recognization_with_real_time_database\\main.py",
+            "imports": [
+                {
+                    "module": "cv2"
+                },
+                {
+                    "module": "os"
+                },
+                {
+                    "module": "face_recognition"
+                },
+                {
+                    "module": "pickle"
+                },
+                {
+                    "module": "numpy"
+                },
+                {
+                    "module": "cvzone"
+                },
+                {
+                    "module": "firebase_admin"
+                },
+                {
+                    "module": "firebase_admin"
+                },
+                {
+                    "module": "firebase_admin"
+                },
+                {
+                    "module": "firebase_admin"
+                },
+                {
+                    "module": "firebase_admin"
+                }
+            ],
+            "functions": [
+                {
+                    "name": "findEncodings",
+                    "line_number": 104,
+                    "docstring": null,
+                    "source_code": "def findEncodings(imagesList):\n    encodeList = []\n    for img in imagesList:\n        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)\n        encode = face_recognition.face_encodings(img)[0]\n        encodeList.append(encode)\n\n    return encodeList"
+                }
+            ],
+            "classes": []
+        }
+    ]
+}

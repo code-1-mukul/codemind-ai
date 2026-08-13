@@ -38,17 +38,17 @@
 
             <ul class="menu">
 
-                <li>📊 Repository Summary</li>
+                <li id="nav-summary">📊 Repository Summary</li>
 
-                <li>🌳 Project Tree</li>
+                <li id="nav-tree">🌳 Project Tree</li>
 
-                <li>🏗 Architecture</li>
+                <li id="nav-architecture">🏗 Architecture</li>
 
-                <li>🔍 Semantic Search</li>
+                <li id="nav-search">🔍 Semantic Search</li>
 
-                <li>🤖 AI Chat</li>
+                <li id="nav-chat">🤖 AI Chat</li>
 
-                <li>📄 Code Chunks</li>
+                <li id="nav-chunks">📄 Code Chunks</li>
 
             </ul>
 
@@ -100,6 +100,10 @@
 
                     <p><strong>Functions:</strong>
                         <span id="summary-functions">-</span>
+                    </p>
+
+                    <p><strong>Imports:</strong>
+                        <span id="summary-imports">-</span>
                     </p>
 
                     <p><strong>Chunks:</strong>
@@ -163,11 +167,44 @@
 
             </div>
 
+            <div
+                id="project-tree"
+                class="tree-card"
+                style="display: none;"
+            >
+
+                <h2>🌳 Project Tree</h2>
+
+                <div id="tree-container"></div>
+
+            </div>
+
+            <div
+                id="architecture"
+                class="architecture-card"
+                style="display: none;"
+            >
+                <h2>🏗 Architecture</h2>
+
+                <div class="architecture-tabs">
+                    <button id="components-tab">
+                        Components
+                    </button>
+
+                    <button id="dataflow-tab">
+                        Data Flow
+                    </button>
+                </div>
+
+                <div id="architecture-graph"></div>
+            </div>
+
         </main>
 
     </div>
 
     <script src="/static/js/dashboard.js"></script>
+    <script src="https://unpkg.com/cytoscape@3.31.2/dist/cytoscape.min.js"></script>
 
 </body>
 

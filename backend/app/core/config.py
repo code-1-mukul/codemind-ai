@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     UPLOAD_DIR: str
     FAISS_STORAGE_DIR: str = "storage/faiss"
     METADATA_STORAGE_DIR: str = "storage/metadata"
+    ANALYSIS_STORAGE_DIR: str = "storage/analysis"
     GEMINI_API_KEY: str
     model_config = SettingsConfigDict(
         env_file=".env",
