@@ -19,12 +19,17 @@ class ClassInfo(BaseModel):
     source_code: str | None = None
     methods: list[FunctionInfo] = Field(default_factory=list)
 
+class DependencyInfo(BaseModel):
+    target: str
+    relation: str
+
 
 class FileAnalysis(BaseModel):
     file_path: str
     imports: list[ImportInfo] = []
     functions: list[FunctionInfo] = []
     classes: list[ClassInfo] = []
+    dependencies: list[DependencyInfo] = Field(default_factory=list)
 
 
 class RepositoryAnalysis(BaseModel):

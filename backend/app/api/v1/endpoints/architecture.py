@@ -13,6 +13,7 @@ architecture_service = ArchitectureService()
 def get_repository_architecture(
     repository_name: str,
 ):
+    print("ARCHITECTURE REPOSITORY:", repository_name)
 
     try:
 
@@ -25,6 +26,20 @@ def get_repository_architecture(
                 analysis
             )
         )
+
+        print("FILE GRAPH:", file_graph)
+
+        print("\n===== IMPORT ANALYSIS =====")
+
+        for file in analysis.files:
+
+            print(f"\nFILE: {file.file_path}")
+
+            for imported in file.imports:
+
+                print(f"  IMPORT: {imported.module}")
+
+        print("============================\n")
 
         module_graph = (
             architecture_service.build_module_architecture(

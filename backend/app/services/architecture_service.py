@@ -14,64 +14,119 @@ from app.schemas.architecture import (
 class ArchitectureService:
 
     def build_architecture(
-        self,
-        analysis: RepositoryAnalysis,
+    self,
+    analysis: RepositoryAnalysis,
     ) -> ArchitectureGraph:
 
         nodes = []
         edges = []
 
-        module_to_file = {}
+        
+        # 1. Build a lookup of all Python files in the repository
+        
+
+        file_lookup = {}
 
         for file in analysis.files:
 
             path = Path(file.file_path)
 
-            parts = list(path.with_suffix("").parts)
+            # Convert:
+            #
+            # backend/app/services/test.py
+            #
+            # into possible module representations.
+            #
+            # We keep the file path as the canonical identifier.
 
-            # Find the "app" package inside the path
-            if "app" in parts:
+            file_lookup[file.file_path] = path
 
-                app_index = parts.index("app")
-
-                module_parts = parts[app_index:]
-
-                module_name = ".".join(module_parts)
-
-                module_to_file[module_name] = file.file_path
+        
+        # 2. Create nodes for every analyzed file
+        
 
         for file in analysis.files:
 
             path = Path(file.file_path)
-
-            group = None
-
-            parts = path.parts
-
-            if "app" in parts:
-
-                app_index = parts.index("app")
-
-                relative_parts = parts[app_index + 1:]
-
-                if relative_parts:
-
-                    # File directly inside app/
-                    if len(relative_parts) == 1:
-                        group = "app"
-
-                    # File inside a subdirectory of app/
-                    else:
-                        group = relative_parts[0]
 
             nodes.append(
                 ArchitectureNode(
                     id=file.file_path,
                     label=path.name,
                     type="file",
-                    group=group,
+                    group=None,
                 )
             )
+
+
+        for file in analysis.files:
+
+            for dependency in file.dependencies:
+
+                target = dependency.target
+
+                # Don't create duplicate artifact nodes
+                if any(node.id == target for node in nodes):
+                    continue
+
+                nodes.append(
+                    ArchitectureNode(
+                        id=target,
+                        label=Path(target).name,
+                        type="artifact",
+                        group="artifacts",
+                    )
+                )
+
+        
+        # 3. Helper for finding an internal file from an import
+        
+
+        def find_internal_file(imported_module: str):
+
+            # Convert:
+            #
+            # package.module
+            #
+            # into:
+            #
+            # package/module
+
+            module_path = Path(
+                *imported_module.split(".")
+            )
+
+            # Try possible Python representations.
+            candidates = [
+                module_path.with_suffix(".py"),
+                module_path / "__init__.py",
+            ]
+
+            for candidate in candidates:
+
+                candidate_str = str(candidate)
+
+                for file_path in file_lookup:
+
+                    normalized_file = str(
+                        Path(file_path)
+                    )
+
+                    # Compare using path suffix.
+                    #
+                    # This allows the repository to live inside
+                    # an arbitrary upload directory.
+
+                    if normalized_file.endswith(
+                        candidate_str
+                    ):
+                        return file_path
+
+            return None
+
+        
+        # 4. Build dependency edges
+        
 
         existing_edges = set()
 
@@ -83,66 +138,47 @@ class ArchitectureService:
 
                 module = imported_module.module
 
-                target_file = None
-        
-                # Direct module match
+                target_file = find_internal_file(
+                    module
+                )
 
-                if module in module_to_file:
+                # Only create an edge when the imported
+                # module belongs to this repository.
 
-                    target_file = module_to_file[module]
+                if target_file is None:
+                    continue
 
-                # Handle imports from a module
-                #
-                # Example:
-                #
-                # app.services.analysis_service.AnalysisService
-                #
-                # → app.services.analysis_service
+                edge_key = (
+                    source_id,
+                    target_file,
+                )
 
-                else:
+                if edge_key in existing_edges:
+                    continue
 
-                    module_parts = module.split(".")
+                existing_edges.add(edge_key)
 
-                    for i in range(
-                        len(module_parts),
-                        0,
-                        -1,
-                    ):
-
-                        candidate = ".".join(
-                            module_parts[:i]
-                        )
-
-                        if candidate in module_to_file:
-
-                            target_file = module_to_file[
-                                candidate
-                            ]
-
-                            break
-
-                # Create internal relationship
-
-                if target_file is not None:
-
-                    edge_key = (
-                        source_id,
-                        target_file,
+                edges.append(
+                    ArchitectureEdge(
+                        source=source_id,
+                        target=target_file,
+                        relation="imports",
                     )
+                )
 
-                    if edge_key in existing_edges:
-                        continue
+        for file in analysis.files:
 
-                    existing_edges.add(edge_key)
+            source_id = file.file_path
 
-                    edges.append(
-                        ArchitectureEdge(
-                            source=source_id,
-                            target=target_file,
-                            relation="imports",
-                        )
+            for dependency in file.dependencies:
+
+                edges.append(
+                    ArchitectureEdge(
+                        source=source_id,
+                        target=dependency.target,
+                        relation=dependency.relation,
                     )
-
+                )
         return ArchitectureGraph(
             nodes=nodes,
             edges=edges,
