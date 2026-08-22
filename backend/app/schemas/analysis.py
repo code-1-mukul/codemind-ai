@@ -23,6 +23,11 @@ class DependencyInfo(BaseModel):
     target: str
     relation: str
 
+class CallInfo(BaseModel):
+    caller: str
+    callee: str
+    line_number: int
+
 
 class FileAnalysis(BaseModel):
     file_path: str
@@ -30,6 +35,7 @@ class FileAnalysis(BaseModel):
     functions: list[FunctionInfo] = []
     classes: list[ClassInfo] = []
     dependencies: list[DependencyInfo] = Field(default_factory=list)
+    calls: list[CallInfo] = Field(default_factory=list)
 
 
 class RepositoryAnalysis(BaseModel):

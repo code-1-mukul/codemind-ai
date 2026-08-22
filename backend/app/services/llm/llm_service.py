@@ -28,3 +28,20 @@ class LLMService:
         response = self.provider.generate_response(prompt)
 
         return response
+
+    def infer_architecture(
+        self,
+        repository_name: str,
+        project_tree: dict,
+        analysis: dict,
+    ) -> str:
+
+        prompt = PromptBuilder.build_architecture_prompt(
+            repository_name=repository_name,
+            project_tree=project_tree,
+            analysis=analysis,
+        )
+
+        response = self.provider.generate_response(prompt)
+
+        return response

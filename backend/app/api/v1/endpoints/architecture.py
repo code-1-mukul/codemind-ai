@@ -2,6 +2,8 @@ from fastapi import APIRouter, HTTPException
 
 from app.services.analysis_storage_service import AnalysisStorageService
 from app.services.architecture_service import ArchitectureService
+from app.services.tree_service import TreeService
+from app.utils.repository import get_repository_path
 
 router = APIRouter()
 
@@ -13,12 +15,18 @@ architecture_service = ArchitectureService()
 def get_repository_architecture(
     repository_name: str,
 ):
-    print("ARCHITECTURE REPOSITORY:", repository_name)
+    # print("ARCHITECTURE REPOSITORY:", repository_name)
 
     try:
 
         analysis = analysis_storage_service.load_analysis(
             repository_name
+        )
+
+        repository_path = get_repository_path(repository_name)
+
+        tree = TreeService.build_tree(
+            str(repository_path)
         )
 
         file_graph = (
@@ -27,28 +35,30 @@ def get_repository_architecture(
             )
         )
 
-        print("FILE GRAPH:", file_graph)
+        # print("FILE GRAPH:", file_graph)
 
-        print("\n===== IMPORT ANALYSIS =====")
+        # print("\n===== IMPORT ANALYSIS =====")
 
-        for file in analysis.files:
+        # for file in analysis.files:
 
-            print(f"\nFILE: {file.file_path}")
+        #     print(f"\nFILE: {file.file_path}")
 
-            for imported in file.imports:
+        #     for imported in file.imports:
 
-                print(f"  IMPORT: {imported.module}")
+        #         print(f"  IMPORT: {imported.module}")
 
-        print("============================\n")
+        # print("============================\n")
 
         module_graph = (
-            architecture_service.build_module_architecture(
-                file_graph
+            architecture_service.infer_component_architecture(
+                repository_name=repository_name,
+                analysis=analysis,
+                tree=tree,
             )
         )
 
         data_flow = (
-            architecture_service.build_analysis_flow()
+            architecture_service.build_analysis_flow(analysis)
         )
 
         return {

@@ -127,6 +127,9 @@ function showSection(sectionId) {
     document.getElementById("architecture").style.display =
         "none";
 
+    document.getElementById("semantic-search").style.display =
+        "none";
+
 
     // Show requested section
     if (sectionId === "repository-summary") {
@@ -394,6 +397,86 @@ document
                 error
             );
         }
+    });
+
+document
+    .getElementById("nav-search")
+    .addEventListener("click", function () {
+        showSection("semantic-search");
+    });
+
+document
+    .getElementById("search-btn")
+    .addEventListener("click", async function () {
+
+        const query = document
+            .getElementById("search-query")
+            .value
+            .trim();
+
+        if (!query) {
+            alert("Please enter a search query.");
+            return;
+        }
+
+        const repositoryName =
+            localStorage.getItem("repositoryName");
+
+        if (!repositoryName) {
+            alert("No repository loaded.");
+            return;
+        }
+
+        const response = await fetch(
+            `/api/v1/repository/${encodeURIComponent(repositoryName)}/search`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    query: query,
+                    top_k: 5
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        const resultsContainer =
+            document.getElementById("search-results");
+
+        resultsContainer.innerHTML = "";
+
+        if (data.results.length === 0) {
+            resultsContainer.innerHTML =
+                "<p>No relevant code found.</p>";
+            return;
+        }
+
+        data.results.forEach((result, index) => {
+
+            const resultCard = document.createElement("div");
+
+            resultCard.classList.add("search-result");
+
+            resultCard.innerHTML = `
+                <div class="search-result-header">
+                    <div>
+                        <strong>${result.file_path}</strong>
+                        <span>${result.chunk_name}</span>
+                    </div>
+
+                    <span class="search-score">
+                        Score: ${result.score.toFixed(3)}
+                    </span>
+                </div>
+
+                <pre><code>${result.content}</code></pre>
+            `;
+
+            resultsContainer.appendChild(resultCard);
+        });
     });
 
 

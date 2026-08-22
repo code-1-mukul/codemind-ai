@@ -6,6 +6,8 @@ class ArchitectureNode(BaseModel):
     label: str
     type: str
     group: str | None = None
+    files: list[str] = []
+    
 
 class ArchitectureEdge(BaseModel):
     source: str

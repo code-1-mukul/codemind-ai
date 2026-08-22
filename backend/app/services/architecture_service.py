@@ -1,5 +1,9 @@
 from pathlib import Path
 
+import json
+
+from app.services.llm.llm_service import LLMService
+
 from app.schemas.analysis import RepositoryAnalysis
 from app.schemas.architecture import (
     ArchitectureGraph,
@@ -10,8 +14,40 @@ from app.schemas.architecture import (
     DataFlowGraph,
 )
 
-
 class ArchitectureService:
+
+    def __init__(self):
+        self.llm_service = LLMService()
+
+    def infer_component_architecture(
+        self,
+        repository_name: str,
+        analysis: RepositoryAnalysis,
+        tree,
+    ) -> ArchitectureGraph:
+
+        response = self.llm_service.infer_architecture(
+            repository_name=repository_name,
+            project_tree=tree.model_dump(),
+            analysis=analysis.model_dump(),
+        )
+
+        try:
+            architecture_data = json.loads(response)
+
+        except json.JSONDecodeError as e:
+            raise ValueError(
+                f"LLM returned invalid architecture JSON: {e}"
+            )
+
+        for edge in architecture_data.get("edges", []):
+
+            if "relation" not in edge and "label" in edge:
+                edge["relation"] = edge.pop("label")
+
+        return ArchitectureGraph.model_validate(
+            architecture_data
+        )
 
     def build_architecture(
     self,
@@ -49,12 +85,30 @@ class ArchitectureService:
 
             path = Path(file.file_path)
 
+            parts = path.parts
+
+            repository_index = None
+
+            for i, part in enumerate(parts):
+                if part.endswith('.git'):
+                    repository_index=i
+                    break;
+
+            group = 'root'
+
+            if repository_index is not None:
+                relative_parts = parts[repository_index+1:]
+
+                if len(relative_parts)>1:
+                    directories = relative_parts[:-1]
+                    group = directories[-1]
+
             nodes.append(
                 ArchitectureNode(
                     id=file.file_path,
                     label=path.name,
                     type="file",
-                    group=None,
+                    group=group,
                 )
             )
 
@@ -187,28 +241,41 @@ class ArchitectureService:
     def build_module_architecture(
         self,
         graph: ArchitectureGraph,
+        tree,
     ) -> ArchitectureGraph:
 
         module_nodes = {}
         module_edge_counts = {}
 
-        # Create one node for each group
+        def collect_directories(node):
+            directories = []
 
-        for node in graph.nodes:
+            if node.is_directory:
+                directories.append(node.path)
 
-            group = node.group
+                for child in node.children:
+                    directories.extend(
+                        collect_directories(child)
+                    )
 
-            if group is None:
-                group = "external"
+            return directories
 
-            if group not in module_nodes:
 
-                module_nodes[group] = ArchitectureNode(
-                    id=f"group:{group}",
-                    label=group,
-                    type="module",
-                    group=group,
-                )
+        tree_directories = collect_directories(tree)
+
+        for directory in tree_directories:
+
+            if not directory:
+                continue
+
+            component_name = Path(directory).name
+
+            module_nodes[component_name] = ArchitectureNode(
+                id=f"group:{component_name}",
+                label=component_name,
+                type="module",
+                group=component_name,
+            )
 
         # Aggregate file-level relationships
 
@@ -264,118 +331,60 @@ class ArchitectureService:
             edges=module_edges,
         )
 
-    def build_analysis_flow(self) -> DataFlowGraph:
+    def build_analysis_flow(
+            self,
+            analysis: RepositoryAnalysis,
+    ) -> DataFlowGraph:
 
-        nodes = [
-            FlowNode(
-                id="repository",
-                label="Repository",
-                type="input",
-            ),
-            FlowNode(
-                id="analysis_service",
-                label="Analysis Service",
-                type="service",
-            ),
-            FlowNode(
-                id="parser",
-                label="Parser",
-                type="processing",
-            ),
-            FlowNode(
-                id="repository_analysis",
-                label="Repository Analysis",
-                type="data",
-            ),
-            FlowNode(
-                id="analysis_storage",
-                label="Analysis Storage",
-                type="storage",
-            ),
-            FlowNode(
-                id="chunking_service",
-                label="Chunking Service",
-                type="service",
-            ),
-            FlowNode(
-                id="chunks",
-                label="Code Chunks",
-                type="data",
-            ),
-            FlowNode(
-                id="indexing_service",
-                label="Indexing Service",
-                type="service",
-            ),
-            FlowNode(
-                id="embedding_service",
-                label="Embedding Service",
-                type="service",
-            ),
-            FlowNode(
-                id="embeddings",
-                label="Embeddings",
-                type="data",
-            ),
-            FlowNode(
-                id="vector_store",
-                label="Vector Store",
-                type="storage",
-            ),
-        ]
+        nodes = []
+        edges = []
 
-        edges = [
-            FlowEdge(
-                source="repository",
-                target="analysis_service",
-                relation="input",
-            ),
-            FlowEdge(
-                source="analysis_service",
-                target="parser",
-                relation="parses",
-            ),
-            FlowEdge(
-                source="parser",
-                target="repository_analysis",
-                relation="produces",
-            ),
-            FlowEdge(
-                source="repository_analysis",
-                target="analysis_storage",
-                relation="stores",
-            ),
-            FlowEdge(
-                source="repository_analysis",
-                target="chunking_service",
-                relation="input",
-            ),
-            FlowEdge(
-                source="chunking_service",
-                target="chunks",
-                relation="produces",
-            ),
-            FlowEdge(
-                source="chunks",
-                target="indexing_service",
-                relation="input",
-            ),
-            FlowEdge(
-                source="indexing_service",
-                target="embedding_service",
-                relation="generates",
-            ),
-            FlowEdge(
-                source="embedding_service",
-                target="embeddings",
-                relation="produces",
-            ),
-            FlowEdge(
-                source="embeddings",
-                target="vector_store",
-                relation="stores",
-            ),
-        ]
+        file_nodes = {}
+
+        for file in analysis.files:
+
+            file_node = FlowNode(
+                id=file.file_path,
+                label=Path(file.file_path).name,
+                type="file",
+            )
+
+            nodes.append(file_node)
+            file_nodes[file.file_path] = file_node
+
+        for file in analysis.files:
+
+            source_id = file.file_path
+
+            for dependency in file.dependencies:
+
+                edges.append(
+                    FlowEdge(
+                        source=source_id,
+                        target=dependency.target,
+                        relation=dependency.relation,
+                    )
+                )
+
+        for file in analysis.files:
+
+            for dependency in file.dependencies:
+
+                target = dependency.target
+
+                if target in file_nodes:
+                    continue
+
+                if any(node.id == target for node in nodes):
+                    continue
+
+                nodes.append(
+                    FlowNode(
+                        id=target,
+                        label=Path(target).name,
+                        type="data",
+                    )
+                )
 
         return DataFlowGraph(
             nodes=nodes,
